@@ -220,7 +220,7 @@ function renderHome() {
 }
 
 function enterWork({ vol = '', issue = '', status = '' } = {}) {
-  VOL = vol; page = 0;
+  VOL = vol; page = 0; SEL = null;
   $('#fissue').value = issue; $('#fstatus').value = status; $('#q').value = '';
   $('#vols').querySelectorAll('button').forEach(x => x.classList.toggle('on', x.dataset.v === vol));
   document.body.classList.add('working');
@@ -232,6 +232,7 @@ function goHome() {
   SEL = null;
   $('#empty').hidden = false; $('#work').hidden = true;
   renderHome();
+  renderBanner();
 }
 $('#home-btn').onclick = goHome;
 
@@ -282,6 +283,7 @@ function apply() {
   });
   if (page * PAGE_SIZE >= VIEW.length) page = 0;
   render();
+  renderBanner();
 }
 
 // ---------------------------------------------------------------- table
