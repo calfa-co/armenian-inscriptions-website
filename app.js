@@ -407,6 +407,28 @@ function select(id) {
     b.onclick = () => save(n.id, { crop_status: b.dataset.crop }));
 }
 
+// None of the diplomatic marks are on a keyboard, and the corpus is defined by
+// getting them exactly right - so they are buttons. Wrap the selection, or
+// insert at the cursor with the caret left between the pair.
+const MARKS = [
+  ['\u23A1', '\u23A4', 'restoration', 'letters the editor restored'],
+  ['\u23A3', '\u23A6', 'error', 'an error or omission on the stone'],
+  ['[', ']', 'extraneous', 'characters that do not belong'],
+  ['...', '', 'broken', 'letters destroyed, count unknown'],
+  ['/', '', 'line', 'a line boundary on the stone'],
+];
+
+function insertMark(el, open, close) {
+  const s = el.selectionStart, e = el.selectionEnd, v = el.value;
+  const sel = v.slice(s, e);
+  el.value = v.slice(0, s) + open + sel + close + v.slice(e);
+  // Caret inside the pair when nothing was selected, after it when something was.
+  const at = sel ? s + open.length + sel.length + close.length : s + open.length;
+  el.focus();
+  el.setSelectionRange(at, at);
+  el.dataset.touched = '1';
+}
+
 function renderFields(n) {
   $('#fields').innerHTML = EDITABLE.map(k => {
     const v = eff(n, k), dirty = isEdited(n, k);
@@ -417,12 +439,28 @@ function renderFields(n) {
         ${dirty ? '<button class="rev">revert to model</button>' : ''}
         ${!v.trim() ? '<span class="empty-note">not extracted</span>' : ''}</label>
       ${big ? `<textarea rows="${rows}">${esc(v)}</textarea>` : `<input value="${esc(v)}">`}
+      ${k === 'transcription' ? `<div class="marks">${MARKS.map(([o, c, lbl, tip], i) =>
+        `<button data-m="${i}" title="${esc(tip)}"><b>${esc(o + (c ? ' ' + c : ''))}</b>${esc(lbl)}</button>`
+        ).join('')}<span class="mhint">wraps the selected text, or inserts where the cursor is</span></div>` : ''}
       <div class="orig">model: ${esc(n[k] ?? '')}</div>
     </div>`;
   }).join('');
+
   $('#fields').querySelectorAll('.fld').forEach(d => {
     const k = d.dataset.k, el = d.querySelector('textarea,input');
-    el.onchange = () => save(n.id, { fields: { [k]: el.value === (n[k] ?? '') ? null : el.value } });
+    const commit = () => {
+      delete el.dataset.touched;
+      save(n.id, { fields: { [k]: el.value === (n[k] ?? '') ? null : el.value } });
+    };
+    el.onchange = commit;
+    // A mark inserted by button does not always set the browser's own dirty
+    // flag, so a blur after clicking only buttons would otherwise lose the edit.
+    el.onblur = () => { if (el.dataset.touched) commit(); };
+    d.querySelectorAll('[data-m]').forEach(b => b.onmousedown = ev => {
+      ev.preventDefault();          // keep the caret where the reviewer left it
+      const [o, c] = MARKS[+b.dataset.m];
+      insertMark(el, o, c);
+    });
     const rev = d.querySelector('.rev');
     if (rev) rev.onclick = () => save(n.id, { fields: { [k]: null } });
   });

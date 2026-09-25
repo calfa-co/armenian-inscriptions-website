@@ -370,3 +370,15 @@ body.propose.readonly .bx{cursor:pointer}
   padding:3px 8px;border-radius:6px;cursor:help;white-space:nowrap}
 #mode.mode-local{background:#f2efe8;color:#7a6f57;border:1px solid #e0d9c6}
 #mode:empty{display:none}
+
+/* The diplomatic marks, as buttons. They are the whole point of the corpus and
+   none of them is reachable from a keyboard. */
+.marks{display:flex;gap:4px;flex-wrap:wrap;align-items:center;margin-top:6px}
+.marks button{display:flex;gap:5px;align-items:center;border:1px solid var(--rule);
+  background:#fff;border-radius:6px;padding:3px 8px;cursor:pointer;
+  font:11px var(--ui);color:var(--mut)}
+.marks button b{font:600 13px/1 var(--arm);color:var(--ink)}
+.marks button:hover{border-color:var(--accent);color:var(--ink-2);background:var(--accent-soft)}
+.marks button:active{transform:scale(.95)}
+.mhint{font:10.5px var(--ui);color:var(--mut);margin-left:2px}
+@media(max-width:1100px){.mhint{display:none}}
