@@ -98,14 +98,9 @@ async function load() {
   NOTICES = d.notices; CORR = d.corrections || {};
 
   // Corrections come from the data repository itself, not from the copy that
-  // shipped with this page, so one that was applied five minutes ago is already
-  // here. The bundled copy is the fallback for when that fetch fails.
-  if (CFG.live) {
-    try {
-      const r = await fetch(CFG.live, { cache: 'no-cache' });
-      if (r.ok) CORR = await r.json();
-    } catch (_) { /* keep the bundled snapshot */ }
-  }
+  // shipped with this page, so one applied minutes ago is already here.
+  const live = await fetchCorrections({ fresh: Object.keys(PENDING).length > 0 });
+  if (live) CORR = live;
   reconcilePending();
   if (CFG.readOnly) document.body.classList.add('readonly');
   if (CFG.propose) document.body.classList.add('propose');
@@ -133,6 +128,7 @@ async function load() {
   renderHome();
   apply();
   renderBanner();
+  if (Object.values(PENDING).some(p => p.proposed_at)) startPolling();
 }
 
 // ---------------------------------------------------------------- overview
@@ -682,15 +678,9 @@ addEventListener('resize', refit);
 
 // Coming back to the tab is the moment a correction is most likely to have
 // landed - the issue was just filed in the other one.
-addEventListener('visibilitychange', async () => {
-  if (document.hidden || !CFG.live || !Object.keys(PENDING).length) return;
-  try {
-    const r = await fetch(CFG.live, { cache: 'no-cache' });
-    if (!r.ok) return;
-    CORR = await r.json();
-    reconcilePending();
-    render(); renderBanner(); if (SEL) select(SEL);
-  } catch (_) {}
+addEventListener('visibilitychange', () => {
+  if (document.hidden || !Object.keys(PENDING).length) return;
+  checkNow(null);
 });
 
 // ---------------------------------------------------------------- splitters
@@ -740,6 +730,60 @@ async function save(id, payload) {
 }
 
 // ------------------------------------------------- proposals (public site)
+// Two ways to read the published corrections, because they fail differently.
+//
+// raw.githubusercontent is free and unlimited but sits behind a CDN with a
+// roughly five minute cache that a query string does NOT bust - so right after
+// someone's correction is applied, it is the one source guaranteed to be wrong.
+// The API is current within a minute but allows 60 requests an hour per address.
+//
+// So: the CDN for ordinary reading, the API only while someone is waiting on a
+// correction of their own. A visitor who never edits costs the API nothing.
+const LIVE_API = CFG.propose
+  ? `https://api.github.com/repos/${CFG.propose}/contents/corrections.json` : null;
+
+async function fetchCorrections({ fresh = false } = {}) {
+  if (fresh && LIVE_API) {
+    try {
+      const r = await fetch(LIVE_API, { headers: { Accept: 'application/vnd.github.raw' } });
+      if (r.ok) return await r.json();
+    } catch (_) { /* fall through to the CDN */ }
+  }
+  if (CFG.live) {
+    try {
+      const r = await fetch(CFG.live, { cache: 'no-cache' });
+      if (r.ok) return await r.json();
+    } catch (_) { /* keep whatever we have */ }
+  }
+  return null;
+}
+
+async function checkNow(btn) {
+  if (btn) { btn.disabled = true; btn.textContent = 'checking…'; }
+  const live = await fetchCorrections({ fresh: true });
+  if (live) CORR = live;
+  const before = Object.keys(PENDING).length;
+  reconcilePending();
+  render(); renderBanner(); if (SEL) select(SEL);
+  return before - Object.keys(PENDING).length;
+}
+
+// While something is awaiting GitHub, look again on a timer - but a bounded
+// number of times. The API limit is 60 an hour and an abandoned tab must not
+// spend it.
+let pollsLeft = 0, pollTimer = null;
+function startPolling() {
+  pollsLeft = 10;
+  if (pollTimer) return;
+  pollTimer = setInterval(async () => {
+    const waiting = Object.values(PENDING).some(p => p.proposed_at);
+    if (!waiting || pollsLeft-- <= 0 || document.hidden) {
+      if (!waiting || pollsLeft <= 0) { clearInterval(pollTimer); pollTimer = null; }
+      return;
+    }
+    await checkNow(null);
+  }, 60000);
+}
 // A correction stops being "unsubmitted" when it turns up in the published
 // data, not when the issue form opens - we never learn whether someone pressed
 // Create. Comparing against what actually landed is the only honest signal, and
@@ -803,7 +847,7 @@ async function propose(id) {
   if (!n || !p) return;
   const url = issueURL(n, p);
   p.proposed_at = new Date().toISOString();
-  savePending(); renderBanner();
+  savePending(); renderBanner(); startPolling();
   if (url.length < 8000) { open(url, '_blank', 'noopener'); return; }
   // Above GitHub's cap the query string 414s, so hand it over by clipboard.
   try {
@@ -825,11 +869,20 @@ function renderBanner() {
   if (bar.hidden) return;
   const here = SEL && PENDING[SEL];
   const sent = ids.filter(i => PENDING[i].proposed_at).length;
-  bar.innerHTML = `<b>${ids.length}</b> correction${ids.length > 1 ? 's' : ''} not yet in the data
-    ${sent ? `<span class="sent">${sent} awaiting GitHub</span>` : ''}
+  bar.innerHTML = `<b>${ids.length}</b> correction${ids.length > 1 ? 's' : ''} of yours
+    ${sent ? `<span class="sent">${sent} submitted &mdash; GitHub usually publishes within a few minutes</span>` : 'not yet sent'}
     ${here ? `<button id="pb-send">${here.proposed_at ? 'Propose again' : 'Propose this notice on GitHub'}</button>` : ''}
-    ${here && here.proposed_at ? '<button id="pb-done" class="quiet">already applied &mdash; clear it</button>' : ''}
+    ${sent ? '<button id="pb-check">check now</button>' : ''}
+    ${here && here.proposed_at ? '<button id="pb-done" class="quiet">clear this one</button>' : ''}
     <button id="pb-clear" class="quiet">discard all</button>`;
+  const chk = $('#pb-check');
+  if (chk) chk.onclick = async () => {
+    const n = await checkNow(chk);
+    if (!n && $('#pb-check')) {
+      $('#pb-check').disabled = false;
+      $('#pb-check').textContent = 'not published yet — try again shortly';
+    }
+  };
   const done = $('#pb-done');
   if (done) done.onclick = () => { delete PENDING[SEL]; savePending(); select(SEL); renderBanner(); };
   const send = $('#pb-send');
