@@ -170,11 +170,16 @@ function renderHome() {
     The extraction is partial and still being improved - this is where it gets checked
     against the printed page.`;
   $('#hero-bar').innerHTML = bar(all).replace(/^<div class="progress">|<\/div>$/g, '');
+  // Every count here is a question - "which ones?" - so each one answers it.
   $('#hero-key').innerHTML = `
-    <span><em style="background:var(--ok)"></em><b>${all.reviewed}</b> reviewed</span>
-    <span><em style="background:var(--warn)"></em><b>${all.attention}</b> need attention</span>
-    <span><em style="background:#eae7e0"></em><b>${all.n - done}</b> untouched</span>
-    <span><b>${all.edited}</b> notices carry a human edit</span>`;
+    <button class="link" data-status="reviewed"><em style="background:var(--ok)"></em><b>${all.reviewed}</b> reviewed</button>
+    <button class="link" data-status="needs_attention"><em style="background:var(--warn)"></em><b>${all.attention}</b> need attention</button>
+    <button class="link" data-status="unreviewed"><em style="background:#eae7e0"></em><b>${all.n - done}</b> untouched</button>
+    <button class="link" data-issue="edited"><b>${all.edited}</b> notices carry a human edit</button>`;
+  $('#hero-key').querySelectorAll('[data-status]').forEach(b =>
+    b.onclick = () => enterWork({ status: b.dataset.status }));
+  $('#hero-key').querySelectorAll('[data-issue]').forEach(b =>
+    b.onclick = () => enterWork({ issue: b.dataset.issue }));
 
   $('#vol-cards').innerHTML = vols.map(v => {
     const s = stats(NOTICES.filter(n => n.volume === v));
@@ -214,9 +219,9 @@ function renderHome() {
     b.onclick = () => enterWork({ issue: b.dataset.queue }));
 }
 
-function enterWork({ vol = '', issue = '' } = {}) {
+function enterWork({ vol = '', issue = '', status = '' } = {}) {
   VOL = vol; page = 0;
-  $('#fissue').value = issue; $('#fstatus').value = ''; $('#q').value = '';
+  $('#fissue').value = issue; $('#fstatus').value = status; $('#q').value = '';
   $('#vols').querySelectorAll('button').forEach(x => x.classList.toggle('on', x.dataset.v === vol));
   document.body.classList.add('working');
   apply();
@@ -242,6 +247,8 @@ function apply() {
       const t = eff(n, 'transcription');
       if (iss.startsWith('crop_')) { if (cropState(n) !== iss.slice(5)) return false; }
       else if (iss === 'edited' && !anyEdit(n)) return false;
+      else if (iss === 'pending' && !(PENDING[n.id] && !PENDING[n.id].proposed_at)) return false;
+      else if (iss === 'awaiting' && !(PENDING[n.id] && PENDING[n.id].proposed_at)) return false;
       else if (iss === 'no_transcription' && t.trim()) return false;
       else if (iss === 'missing_fields' && REQUIRED.every(k => eff(n, k).trim())) return false;
       else if (iss === 'unbalanced' && !UNBAL(t)) return false;
@@ -892,12 +899,16 @@ function renderBanner() {
   if (bar.hidden) return;
   const here = SEL && PENDING[SEL];
   const sent = ids.filter(i => PENDING[i].proposed_at).length;
-  bar.innerHTML = `<b>${ids.length}</b> correction${ids.length > 1 ? 's' : ''} of yours
-    ${sent ? `<span class="sent">${sent} submitted &mdash; GitHub usually publishes within a few minutes</span>` : 'not yet sent'}
+  const unsent = ids.length - sent;
+  bar.innerHTML = `
+    ${unsent ? `<button class="link" data-goto="pending"><b>${unsent}</b> not yet sent</button>` : ''}
+    ${sent ? `<button class="link sent" data-goto="awaiting"><b>${sent}</b> submitted &mdash; GitHub usually publishes within a few minutes</button>` : ''}
     ${here ? `<button id="pb-send">${here.proposed_at ? 'Propose again' : 'Propose this notice on GitHub'}</button>` : ''}
     ${sent ? '<button id="pb-check">check now</button>' : ''}
     ${here && here.proposed_at ? '<button id="pb-done" class="quiet">clear this one</button>' : ''}
     <button id="pb-clear" class="quiet">discard all</button>`;
+  bar.querySelectorAll('[data-goto]').forEach(b =>
+    b.onclick = () => enterWork({ issue: b.dataset.goto }));
   const chk = $('#pb-check');
   if (chk) chk.onclick = async () => {
     const n = await checkNow(chk);

@@ -288,7 +288,12 @@ body:not(.working) .count{display:none}
 .progress i{display:block;height:100%}
 .progress .p-rev{background:var(--ok)}
 .progress .p-att{background:var(--warn)}
-.progress-key{display:flex;gap:16px;margin-top:8px;font:12px var(--ui);color:var(--mut);flex-wrap:wrap}
+.progress-key{display:flex;gap:6px;margin-top:8px;font:12px var(--ui);color:var(--mut);flex-wrap:wrap}
+button.link{border:0;background:transparent;font:inherit;color:inherit;cursor:pointer;
+  padding:3px 8px;border-radius:6px;text-align:left}
+button.link:hover{background:#f0ede6;color:var(--ink)}
+#propose-bar button.link{color:#6b5314;padding:2px 8px}
+#propose-bar button.link:hover{background:#efe7d2}
 .progress-key b{color:var(--ink-2);font-weight:600}
 .progress-key em{font-style:normal;display:inline-block;width:8px;height:8px;border-radius:2px;
   margin-right:5px;vertical-align:1px}
@@ -341,8 +346,7 @@ body.readonly .bx{cursor:default}
   padding:4px 11px;font:600 12.5px var(--ui);color:#6b5314;cursor:pointer}
 #propose-bar button:hover{border-color:#a8912f}
 #propose-bar button:disabled{opacity:.6;cursor:default}
-#propose-bar .sent{font:11px var(--ui);color:#8a7c52;background:#efe7d2;
-  border-radius:5px;padding:2px 7px}
+#propose-bar .sent{font:11px var(--ui);color:#8a7c52}
 #propose-bar button.quiet{border-color:transparent;background:transparent;
   font-weight:400;color:#8a7c52;margin-left:auto}
 #propose-bar button.quiet:hover{color:var(--bad)}
