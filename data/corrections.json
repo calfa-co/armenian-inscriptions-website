@@ -1,0 +1,185 @@
+{
+ "v1-n1": {
+  "crop": {
+   "box": [
+    228,
+    1149,
+    1915,
+    1568
+   ],
+   "page": "CatInsc_1_000036"
+  },
+  "crop_status": "accepted",
+  "fields": {},
+  "id": "v1-n1",
+  "review_status": "unreviewed",
+  "updated_at": "2026-09-21T07:23:51+00:00",
+  "updated_by": "local"
+ },
+ "v1-n3": {
+  "crop": {
+   "box": [
+    459,
+    1193,
+    1473,
+    1813
+   ],
+   "page": "CatInsc_1_000037"
+  },
+  "crop_status": "accepted",
+  "fields": {},
+  "id": "v1-n3",
+  "review_status": "unreviewed",
+  "updated_at": "2026-09-21T07:13:27+00:00",
+  "updated_by": "local"
+ },
+ "v1-n4": {
+  "crop": {
+   "box": [
+    459,
+    1193,
+    1473,
+    1813
+   ],
+   "page": "CatInsc_1_000037"
+  },
+  "crop_status": "accepted",
+  "fields": {},
+  "id": "v1-n4",
+  "review_status": "unreviewed",
+  "updated_at": "2026-09-21T07:08:33+00:00",
+  "updated_by": "local"
+ },
+ "v10-n16": {
+  "crop": null,
+  "crop_status": "unreviewed",
+  "fields": {
+   "transcription": "† ՈԾԴ. (1205) / Ի ՏԵՐՈՒԹԵ⎣ԱՆ⎦... / ՈՏ ՎԱՐԴԱՊ⎣ԵՏ⎦... /\nԳԱՐԱՈ ՏՆԿԵՑԻ ՅԱՐԿ... Ո/Ր ԷՐ ԵՏ ԴԻՆԱՐՆ ԴՈՒՍՏՐ... Ռ/ՆԴ\nՈՐԴԷՐԵՑ ԵՒ ՎԱՍԱԿ... Ս / ԶԱՐԷ ՋԱՂԱՑՈ ՊՈՒՍՆՈՅՆ... Գ / ՄԻՆ\nԱՒՐ ՏՔԻՆ, ։Բ։ (2) ԱՒՐ ՅՈՐ ՈՒՐՏ... Ս / ԵՏՈՒ ԵՒ ԶԻՄ ԱՅԳԻՆ\nԶԽԱԹՈՒՆԻՆ... Բ / ԻՍ Ի ՀՈԳԵՎԱՆԱՑ ՍԲ ԿԱՐԱՊԵՏՍ... ԻՆ /\nԵԼ ԵՄ ՍԻՄԷՈՆ, ՇՈՒՊՈՒԼԻՍ ՈՐԴԻՍ, ԵՏ... ՈՑ / ԻՄՍ\n† ԵՄ ՄԻԾԻՆՍ, ԷՏՈՒ ԶԻՄ ... ՈՐ... ԿՈԶԻ ... Գ... ՁԵ/ՌՆ\nՍԲ ԵՂԲԱՐՑՍ ԵՊՍԿ ...Պ... ՐԱ ՀԱՅՐ ԱՇՆԱԿԵՑԻ..."
+  },
+  "id": "v10-n16",
+  "review_status": "unreviewed",
+  "updated_at": "2026-09-25T11:04:32+00:00",
+  "updated_by": "local"
+ },
+ "v2-n14": {
+  "crop": {
+   "box": [
+    308,
+    2507,
+    553,
+    2890
+   ],
+   "page": "CatInsc_2_000018"
+  },
+  "crop_status": "accepted",
+  "fields": {},
+  "id": "v2-n14",
+  "review_status": "unreviewed",
+  "updated_at": "2026-09-21T07:08:10+00:00",
+  "updated_by": "local"
+ },
+ "v3-n1": {
+  "crop": {
+   "box": [
+    1692,
+    2988,
+    2421,
+    3419
+   ],
+   "page": "CatInsc_3_000015"
+  },
+  "crop_status": "accepted",
+  "fields": {},
+  "id": "v3-n1",
+  "review_status": "unreviewed",
+  "updated_at": "2026-09-21T10:54:27+00:00",
+  "updated_by": "local"
+ },
+ "v3-n3": {
+  "crop": {
+   "box": [
+    1659,
+    4341,
+    2233,
+    4806
+   ],
+   "page": "CatInsc_3_000015"
+  },
+  "crop_status": "accepted",
+  "fields": {
+   "transcription": "...ԱՆԱԿՆ/ ...ԱԿՆ ԵԴԻ⎡Ր /ՍՈՓԻ ՍԻ ⎤ՒՆԵԱՑ\nՏԻ⎡ԿԻՆ⎤ ... ԱՒՈՐԵ..."
+  },
+  "id": "v3-n3",
+  "review_status": "unreviewed",
+  "updated_at": "2026-09-25T11:03:31+00:00",
+  "updated_by": "local"
+ },
+ "v3-n5": {
+  "crop": {
+   "box": [
+    1816,
+    3434,
+    2426,
+    4346
+   ],
+   "page": "CatInsc_3_000016"
+  },
+  "crop_status": "accepted",
+  "fields": {},
+  "id": "v3-n5",
+  "review_status": "unreviewed",
+  "updated_at": "2026-09-21T10:54:52+00:00",
+  "updated_by": "local"
+ },
+ "v3-n6": {
+  "crop": {
+   "box": [
+    1804,
+    4484,
+    2285,
+    4901
+   ],
+   "page": "CatInsc_3_000016"
+  },
+  "crop_status": "accepted",
+  "fields": {},
+  "id": "v3-n6",
+  "review_status": "unreviewed",
+  "updated_at": "2026-09-21T10:55:05+00:00",
+  "updated_by": "local"
+ },
+ "v6-n4": {
+  "crop": {
+   "box": [
+    240,
+    1240,
+    1107,
+    1688
+   ],
+   "page": "CatInsc_6_000013"
+  },
+  "crop_status": "accepted",
+  "fields": {},
+  "id": "v6-n4",
+  "review_status": "unreviewed",
+  "updated_at": "2026-09-21T10:51:21+00:00",
+  "updated_by": "local"
+ },
+ "v6-n5": {
+  "crop": {
+   "box": [
+    275,
+    2382,
+    1170,
+    2883
+   ],
+   "page": "CatInsc_6_000013"
+  },
+  "crop_status": "accepted",
+  "fields": {},
+  "id": "v6-n5",
+  "review_status": "unreviewed",
+  "updated_at": "2026-09-21T08:58:12+00:00",
+  "updated_by": "local"
+ }
+}

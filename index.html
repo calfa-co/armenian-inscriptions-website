@@ -1,0 +1,106 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Armenian inscriptions — proofreading</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Armenian:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+
+<header>
+  <button class="brand" id="home-btn" title="Back to the overview">
+    <span class="mark">Ա</span>
+    <div><b>Armenian inscriptions</b><i>proofreading</i></div>
+  </button>
+
+  <div class="search">
+    <svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="4.5"/><path d="M10.5 10.5 14 14"/></svg>
+    <input id="q" type="search" placeholder="Search transcription, monument, description…" autocomplete="off">
+  </div>
+
+  <div class="chips" id="vols"></div>
+
+  <select id="fstatus" aria-label="review state">
+    <option value="">Review: all</option>
+    <option value="unreviewed">Unreviewed</option>
+    <option value="reviewed">Reviewed</option>
+    <option value="needs_attention">Needs attention</option>
+  </select>
+
+  <select id="fissue" aria-label="filter">
+    <option value="">Show: all records</option>
+    <optgroup label="Extraction">
+      <option value="no_transcription">No transcription</option>
+      <option value="missing_fields">Missing fields</option>
+      <option value="unbalanced">Unbalanced brackets</option>
+      <option value="notation">Has ⎡⎤ ⎣⎦ [ ] … /</option>
+    </optgroup>
+    <optgroup label="Crop">
+      <option value="crop_auto">Crop auto-paired</option>
+      <option value="crop_ambiguous">Crop ambiguous</option>
+      <option value="crop_none">No detection</option>
+      <option value="crop_human">Crop set by hand</option>
+    </optgroup>
+    <optgroup label="People">
+      <option value="edited">Edited by a human</option>
+    </optgroup>
+  </select>
+
+  <button id="reset-panes" class="ghost" title="Reset the pane widths">Reset layout</button>
+  <span class="count" id="count"></span>
+</header>
+
+<div id="propose-bar" hidden></div>
+
+<main>
+  <section id="home">
+    <div class="hero">
+      <h1>Armenian inscriptions</h1>
+      <p id="hero-sub"></p>
+      <div class="progress" id="hero-bar"><span></span></div>
+      <div class="progress-key" id="hero-key"></div>
+    </div>
+
+    <h2 class="sec">Volumes</h2>
+    <div class="vols" id="vol-cards"></div>
+
+    <h2 class="sec">Start with</h2>
+    <div class="queues" id="queues"></div>
+
+    <p class="foot" id="home-foot"></p>
+  </section>
+
+  <section id="list">
+    <div id="scroll">
+      <table>
+        <thead><tr>
+          <th data-sort="volume" class="c-ref">Ref.</th>
+          <th data-sort="monument">Monument</th>
+          <th class="c-fl"></th>
+        </tr></thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+    <nav id="pager"></nav>
+  </section>
+
+  <div class="split" id="split-main" title="Drag to resize"></div>
+
+  <section id="detail">
+    <div class="empty" id="empty">
+      <span class="mark big">Ա</span>
+      <p>Select a notice to proofread.</p>
+    </div>
+    <div id="work" hidden>
+      <div class="dtop" id="dtop"></div>
+      <div class="panes">
+        <div class="pane" id="pane-text"></div>
+        <div class="split" id="split-detail" title="Drag to resize"></div>
+        <div class="pane" id="pane-page"></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script src="config.js"></script>
+<script src="app.js"></script>
