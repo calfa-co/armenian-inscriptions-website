@@ -266,6 +266,7 @@ tr.sel td:first-child::after{content:"";position:absolute;inset:0 auto 0 0;width
 .pagetabs button{border:1px solid var(--rule);background:#fff;border-radius:6px;padding:3px 8px;
   font:11px var(--mono);color:var(--ink-2);cursor:pointer}
 .pagetabs button.on{border-color:var(--accent);color:var(--accent);background:var(--accent-soft)}
+.pagetabs button{display:flex;gap:4px;align-items:center}
 
 /* ------------------------------------------------------------- overview */
 /* A blank "select a notice" is not a front door. The first screen answers the

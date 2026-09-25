@@ -399,7 +399,13 @@ function select(id) {
 
   renderBanner();
   renderFields(n);
-  renderPage(n, PV.pid && n.pages.includes(PV.pid) ? PV.pid : n.pages[0]);
+  // Open on the page the crop is actually on. A notice can span two pages, and
+  // defaulting to the first showed a reviewer their own box was missing while
+  // the detector's unpaired boxes sat there instead.
+  const ec0 = effCrop(n);
+  const start = PV.pid && n.pages.includes(PV.pid) ? PV.pid
+    : (ec0 && n.pages.includes(ec0.page) ? ec0.page : n.pages[0]);
+  renderPage(n, start);
 
   $('#dtop').querySelectorAll('[data-rev]').forEach(b =>
     b.onclick = () => save(n.id, { review_status: b.dataset.rev }));
@@ -495,9 +501,12 @@ function renderPage(n, pid) {
     return;
   }
   const hc = humanCrop(n), ec = effCrop(n);
+  const ecAll = effCrop(n);
   const tabs = n.pages.length > 1
     ? `<div class="pagetabs">${n.pages.map(p =>
-        `<button data-pg="${esc(p)}" class="${p === pid ? 'on' : ''}">${esc(p)}</button>`).join('')}</div>` : '';
+        `<button data-pg="${esc(p)}" class="${p === pid ? 'on' : ''}"
+           title="${ecAll && ecAll.page === p ? 'the crop for this notice is on this page' : ''}"
+          >${esc(p)}${ecAll && ecAll.page === p ? ' &#9679;' : ''}</button>`).join('')}</div>` : '';
 
   const yolo = (pid === n.pages[0] ? n.yolo_boxes : []);
   const isEff = b => ec && ec.page === pid && ec.box.join() === b.join();
@@ -546,7 +555,10 @@ function renderPage(n, pid) {
             ? 'you marked this notice as having no usable box'
             : yolo.length
               ? 'this page has detections but none is paired with this notice - click one'
-              : 'the detector found no drawing on this page'}</div>` : ''}
+              : 'the detector found no drawing on this page'}</div>`
+        : (ec.page !== pid
+          ? `<div class="nocrop">the crop for this notice is on ${esc(ec.page)} &mdash;
+             shown below, and that page is selected above</div>` : '')}
     </div>`;
 
   wirePage(n, pid, geo);
