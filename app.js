@@ -65,7 +65,11 @@ const isEdited = (n, k) => {
   return !!(c && c.fields && k in c.fields && c.fields[k] !== (n[k] ?? ''));
 };
 const anyEdit = n => EDITABLE.some(k => isEdited(n, k));
-const reviewOf = n => (CORR[n.id] && CORR[n.id].review_status) || 'unreviewed';
+// Must consult PENDING exactly as cropStatusOf does. Reading only the published
+// data meant a reviewer clicked "Reviewed", the change was staged correctly, and
+// the control snapped back - the state was right and the button lied about it.
+const reviewOf = n => (PENDING[n.id] && PENDING[n.id].review_status)
+  || (CORR[n.id] && CORR[n.id].review_status) || 'unreviewed';
 const cropStatusOf = n => (PENDING[n.id] && PENDING[n.id].crop_status)
   || (CORR[n.id] && CORR[n.id].crop_status) || 'unreviewed';
 const humanCrop = n => (PENDING[n.id] && PENDING[n.id].crop !== undefined
@@ -798,7 +802,8 @@ function reconcilePending() {
     const cropDone = !p.crop || (live.crop
       && live.crop.page === p.crop.page
       && String(live.crop.box) === String(p.crop.box));
-    if (fieldsDone && cropDone) { delete PENDING[id]; changed = true; }
+    const statusDone = !p.review_status || live.review_status === p.review_status;
+    if (fieldsDone && cropDone && statusDone) { delete PENDING[id]; changed = true; }
   }
   if (changed) savePending();
 }
@@ -808,10 +813,15 @@ function stage(id, payload) {
     if (v === null) delete p.fields[k]; else p.fields[k] = v;
   }
   if ('crop' in payload) p.crop = payload.crop;
-  if (payload.review_status) p.review_status = payload.review_status;
-  if (payload.crop_status) p.crop_status = payload.crop_status;
+  const base = CORR[id] || {};
+  for (const k of ['review_status', 'crop_status']) {
+    if (!payload[k]) continue;
+    const isDefault = payload[k] === (base[k] || 'unreviewed');
+    if (isDefault) delete p[k]; else p[k] = payload[k];
+  }
   if (!Object.keys(p.fields).length && p.crop == null && !p.review_status && !p.crop_status)
     delete PENDING[id];
+  else if (!PENDING[id]) PENDING[id] = p;
   savePending(); select(id); renderBanner();
 }
 
