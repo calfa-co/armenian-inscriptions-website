@@ -383,3 +383,36 @@ body.propose.readonly .bx{cursor:pointer}
 .marks button:active{transform:scale(.95)}
 .mhint{font:10.5px var(--ui);color:var(--mut);margin-left:2px}
 @media(max-width:1100px){.mhint{display:none}}
+
+/* ------------------------------------------------ how it works + send dialog */
+.how{max-width:1080px;margin:0 auto 34px;padding:0;list-style:none;display:grid;
+  gap:14px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));counter-reset:step}
+.how li{background:var(--card);border:1px solid var(--rule);border-radius:10px;
+  padding:14px 16px 15px;box-shadow:var(--sh);counter-increment:step;position:relative}
+.how li::before{content:counter(step);position:absolute;top:14px;right:14px;
+  font:600 22px var(--ui);color:var(--rule)}
+.how b{display:block;font:600 13.5px var(--ui);margin-bottom:5px;padding-right:22px}
+.how span{display:block;font:12.5px/1.6 var(--ui);color:var(--ink-2)}
+.how em{font-style:normal;font-weight:600;color:var(--accent)}
+
+#confirm{position:fixed;inset:0;z-index:200;background:rgba(27,26,23,.45);
+  display:flex;align-items:center;justify-content:center;padding:24px}
+#confirm[hidden]{display:none}
+#confirm .box{background:var(--card);border-radius:12px;max-width:620px;width:100%;
+  max-height:86vh;overflow:auto;padding:20px 22px;box-shadow:0 12px 40px rgba(0,0,0,.25)}
+#confirm h3{font:600 16px var(--ui);margin:0 0 12px}
+.cf-row{border-top:1px solid var(--rule-soft);padding:9px 0}
+.cf-row:first-child{border-top:0}
+.cf-row b{display:block;font:600 10.5px var(--ui);letter-spacing:.04em;
+  text-transform:uppercase;color:var(--mut);margin-bottom:4px}
+.cf-was,.cf-now{font:13px/1.65 var(--arm);padding:5px 9px;border-radius:5px;white-space:pre-wrap}
+.cf-was{background:#f7f6f3;color:var(--mut);text-decoration:line-through;
+  text-decoration-color:#cfcbc3}
+.cf-now{background:#f1f7f3;color:var(--ink);margin-top:3px}
+.cf-note{font:12.5px/1.6 var(--ui);color:var(--ink-2);background:#fbfaf8;
+  border:1px solid var(--rule);border-radius:8px;padding:10px 12px;margin:14px 0 0}
+.cf-act{display:flex;gap:8px;justify-content:flex-end;margin-top:14px}
+.cf-act button{border:1px solid var(--accent);background:var(--accent);color:#fff;
+  border-radius:7px;padding:7px 14px;font:600 13px var(--ui);cursor:pointer}
+.cf-act button.quiet{background:#fff;color:var(--ink-2);border-color:var(--rule);font-weight:400}
+.cf-act button:hover{filter:brightness(1.08)}

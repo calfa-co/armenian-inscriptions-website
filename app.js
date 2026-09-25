@@ -937,7 +937,43 @@ function issueURL(n, p) {
   return `https://github.com/${CFG.propose}/issues/new?${q}`;
 }
 
-async function propose(id) {
+// "Is my correction sent without control?" was the first question a reader
+// asked, and the interface never answered it. It does now, before anything
+// opens: here is precisely what will go, and nothing is sent until you press
+// Create on GitHub's own form.
+function describe(n, p) {
+  const rows = [];
+  for (const [k, v] of Object.entries(p.fields || {})) {
+    const was = n[k] ?? '';
+    rows.push(`<div class="cf-row"><b>${esc(k.replace('_', ' '))}</b>
+      <div class="cf-was">${was ? esc(was.slice(0, 240)) + (was.length > 240 ? '…' : '')
+        : '<i>nothing was extracted</i>'}</div>
+      <div class="cf-now">${esc(v.slice(0, 240))}${v.length > 240 ? '…' : ''}</div></div>`);
+  }
+  if (p.crop) rows.push(`<div class="cf-row"><b>crop</b>
+    <div class="cf-now">${p.crop.box[2] - p.crop.box[0]}&times;${p.crop.box[3] - p.crop.box[1]} px
+      on ${esc(p.crop.page)}</div></div>`);
+  if (p.crop_status) rows.push(`<div class="cf-row"><b>crop marked</b>
+    <div class="cf-now">${esc(p.crop_status)}</div></div>`);
+  if (p.review_status) rows.push(`<div class="cf-row"><b>notice marked</b>
+    <div class="cf-now">${esc(p.review_status.replace('_', ' '))}</div></div>`);
+  return rows.join('') || '<div class="cf-row"><i>nothing to send</i></div>';
+}
+
+function propose(id) {
+  const n = NOTICES.find(x => x.id === id), p = PENDING[id];
+  if (!n || !p) return;
+  $('#cf-what').innerHTML = describe(n, p);
+  $('#confirm').hidden = false;
+  $('#cf-go').onclick = () => { $('#confirm').hidden = true; sendToGitHub(id); };
+  $('#cf-cancel').onclick = () => { $('#confirm').hidden = true; };
+}
+
+addEventListener('keydown', e => {
+  if (e.key === 'Escape' && !$('#confirm').hidden) $('#confirm').hidden = true;
+});
+
+async function sendToGitHub(id) {
   const n = NOTICES.find(x => x.id === id), p = PENDING[id];
   if (!n || !p) return;
   const url = issueURL(n, p);

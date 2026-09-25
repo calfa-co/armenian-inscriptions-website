@@ -5,7 +5,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Armenian:wght@400;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=a92b717756">
+<link rel="stylesheet" href="style.css?v=a46e34dcdf">
 
 <header>
   <button class="brand" id="home-btn" title="Back to the overview">
@@ -65,6 +65,24 @@
       <div class="progress-key" id="hero-key"></div>
     </div>
 
+    <h2 class="sec">How this works</h2>
+    <ol class="how">
+      <li><b>Edit what is wrong</b>
+        <span>Every field is editable, and you can move or redraw the box around
+        the inscription. Nothing is sent while you do this &mdash; your changes stay
+        in this browser.</span></li>
+      <li><b>Send when you are ready</b>
+        <span>Press <em>Send to GitHub</em>. You are shown exactly what will go, then
+        a pre-filled GitHub issue opens. <b>Nothing leaves your browser until you
+        press Create there.</b> If you have no GitHub account it will ask you to
+        make one &mdash; that is how you get credited.</span></li>
+      <li><b>It is checked and recorded</b>
+        <span>An automatic check validates the correction &mdash; brackets must balance,
+        a box must fall on the page &mdash; then commits it with your name on it. It
+        appears here within a few minutes. The machine's original reading is kept
+        beside yours, never overwritten.</span></li>
+    </ol>
+
     <h2 class="sec">Volumes</h2>
     <div class="vols" id="vol-cards"></div>
 
@@ -106,5 +124,20 @@
   </section>
 </main>
 
+<div id="confirm" hidden>
+  <div class="box" role="dialog" aria-modal="true" aria-labelledby="cf-title">
+    <h3 id="cf-title">Send this correction to GitHub</h3>
+    <div id="cf-what"></div>
+    <p class="cf-note">This opens a pre-filled issue on the data repository.
+      <b>Nothing is sent until you press Create there</b>, and you can edit or
+      abandon it on that page. You will be asked to sign in to GitHub, or to
+      register, so the correction can be credited to you.</p>
+    <div class="cf-act">
+      <button id="cf-cancel" class="quiet">Cancel</button>
+      <button id="cf-go">Open the GitHub issue</button>
+    </div>
+  </div>
+</div>
+
 <script src="config.js?v=716bb8309f"></script>
-<script src="app.js?v=872cef8bf4"></script>
+<script src="app.js?v=e03ee14daa"></script>
