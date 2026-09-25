@@ -403,8 +403,15 @@ function select(id) {
 
   $('#dtop').querySelectorAll('[data-rev]').forEach(b =>
     b.onclick = () => save(n.id, { review_status: b.dataset.rev }));
-  $('#dtop').querySelectorAll('[data-crop]').forEach(b =>
-    b.onclick = () => save(n.id, { crop_status: b.dataset.crop }));
+  $('#dtop').querySelectorAll('[data-crop]').forEach(b => b.onclick = () => {
+    const st = b.dataset.crop, ec = effCrop(n);
+    // "Correct" is a judgement about a specific rectangle. Pin it, so the
+    // approval still means something if the detector is ever re-run.
+    if (st === 'accepted' && ec) return save(n.id, { crop_status: st, crop: ec });
+    if (st === 'rejected') return save(n.id, { crop_status: st, crop: null });
+    if (st === 'unreviewed') return save(n.id, { crop_status: st, crop: null });
+    save(n.id, { crop_status: st });
+  });
 }
 
 // None of the diplomatic marks are on a keyboard, and the corpus is defined by
@@ -850,7 +857,10 @@ function reconcilePending() {
       && live.crop.page === p.crop.page
       && String(live.crop.box) === String(p.crop.box));
     const statusDone = !p.review_status || live.review_status === p.review_status;
-    if (fieldsDone && cropDone && statusDone) { delete PENDING[id]; changed = true; }
+    const cropStatusDone = !p.crop_status || live.crop_status === p.crop_status;
+    if (fieldsDone && cropDone && statusDone && cropStatusDone) {
+      delete PENDING[id]; changed = true;
+    }
   }
   if (changed) savePending();
 }
@@ -888,11 +898,15 @@ function stage(id, payload) {
 function issueBody(n, p) {
   const payload = { id: n.id, fields: p.fields || {} };
   if (p.crop) payload.crop = p.crop;
+  if (p.crop_status) payload.crop_status = p.crop_status;
   if (p.review_status) payload.review_status = p.review_status;
   return [
     `Notice **${n.id}** - volume ${n.volume}, page ${eff(n, 'page')}, no ${eff(n, 'numero')}`,
     eff(n, 'monument') ? `Monument: ${eff(n, 'monument')}` : '',
-    '', 'Fields corrected: ' + Object.keys(p.fields || {}).join(', ') + (p.crop ? ', crop' : ''),
+    '', 'Corrected: ' + ([...Object.keys(p.fields || {}),
+        p.crop ? 'crop' : null, p.crop_status ? `crop marked ${p.crop_status}` : null,
+        p.review_status ? `marked ${p.review_status.replace('_', ' ')}` : null]
+        .filter(Boolean).join(', ') || 'nothing'),
     '', '<!-- correction:begin -->', '```json',
     JSON.stringify(payload, null, 1), '```', '<!-- correction:end -->', '',
     '_Submitted from the proofreading interface. Do not edit the block above -',
@@ -902,7 +916,9 @@ function issueBody(n, p) {
 
 function issueURL(n, p) {
   const q = new URLSearchParams({
-    title: `Correction: ${n.id} (${Object.keys(p.fields || {}).join(', ') || 'crop'})`,
+    title: `Correction: ${n.id} (${[...Object.keys(p.fields || {}),
+      p.crop ? 'crop' : (p.crop_status ? 'crop ' + p.crop_status : null)]
+      .filter(Boolean).join(', ') || 'review'})`,
     labels: 'correction',
     body: issueBody(n, p),
   });
