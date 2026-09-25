@@ -21,16 +21,20 @@ body.resizing *{pointer-events:none}
 ::selection{background:#d7e6f2}
 
 /* ---------------------------------------------------------------- header */
-header{display:flex;gap:12px;align-items:center;flex-wrap:wrap;padding:10px 16px;
-  background:rgba(255,255,255,.88);backdrop-filter:saturate(1.6) blur(8px);
-  border-bottom:1px solid var(--rule);position:relative;z-index:10}
-button.brand{display:flex;gap:9px;align-items:center;border:0;background:transparent;
-  padding:0;cursor:pointer;border-radius:9px;text-align:left}
-button.brand:hover .mark{transform:translateY(-1px);box-shadow:0 3px 8px rgba(23,69,106,.3)}
-.mark{transition:.15s}
-.brand div{display:flex;flex-direction:column;line-height:1.15}
-.brand b{font:600 14px var(--ui);letter-spacing:-.01em}
-.brand i{font:400 11px var(--ui);font-style:normal;color:var(--mut)}
+header{display:flex;gap:10px 14px;align-items:center;flex-wrap:wrap;padding:9px 18px;
+  background:rgba(255,255,255,.92);backdrop-filter:saturate(1.6) blur(10px);
+  border-bottom:1px solid var(--rule);position:relative;z-index:10;
+  box-shadow:0 1px 3px rgba(27,26,23,.03)}
+/* Calfa's mark, then a hairline, then what this particular tool is. The org
+   owns the corpus; the title says what you are looking at. */
+button.brand{display:flex;gap:11px;align-items:center;border:0;background:transparent;
+  padding:2px 4px 2px 0;cursor:pointer;border-radius:8px;text-align:left}
+button.brand:hover .title{color:var(--accent)}
+.calfa{height:24px;width:auto;display:block}
+.brand .rule{width:1px;height:26px;background:var(--rule)}
+.brand .title{display:flex;flex-direction:column;line-height:1.2;
+  font:600 14px var(--ui);letter-spacing:-.01em;transition:color .12s}
+.brand .title i{font:400 11px var(--ui);font-style:normal;color:var(--mut)}
 .mark{display:grid;place-items:center;width:28px;height:28px;border-radius:8px;
   background:linear-gradient(160deg,#2a6fa3,#17456a);color:#fff;
   font:600 15px/1 var(--arm);box-shadow:var(--sh)}
@@ -328,7 +332,10 @@ button.link:hover{background:#f0ede6;color:var(--ink)}
 .qcard .ql i{display:block;font-style:normal;font-size:11.5px;color:var(--mut)}
 .qcard.hot .qn{color:var(--bad)}
 .qcard.warm .qn{color:var(--warn)}
-.foot{max-width:1080px;margin:30px auto 0;font:12px var(--ui);color:var(--mut)}
+.foot{max-width:1080px;margin:34px auto 0;padding-top:16px;border-top:1px solid var(--rule);
+  font:12px var(--ui);color:var(--mut)}
+.foot a{color:var(--accent);text-decoration:none}
+.foot a:hover{text-decoration:underline}
 
 /* The read-only GitHub Pages build: same client, writing disabled. */
 body.readonly .seg,body.readonly .fld button.rev,body.readonly #draw-clear,
@@ -338,12 +345,12 @@ body.readonly .bx{cursor:default}
 
 /* Unsubmitted corrections live only in this browser until GitHub takes them,
    so the bar has to be impossible to miss - a lost proposal is lost work. */
-#propose-bar{display:flex;gap:10px;align-items:center;padding:8px 16px;
-  background:#f6f1e4;border-bottom:1px solid #e2d8bf;color:#6b5314;font:13px var(--ui)}
+#propose-bar{display:flex;gap:8px;align-items:center;padding:7px 18px;
+  background:#f8f4e9;border-bottom:1px solid #e6dcc6;color:#6b5314;font:12.5px var(--ui)}
 #propose-bar[hidden]{display:none}
 #propose-bar b{font-weight:600}
-#propose-bar button{border:1px solid #cdbf98;background:#fff;border-radius:7px;
-  padding:4px 11px;font:600 12.5px var(--ui);color:#6b5314;cursor:pointer}
+#propose-bar button{border:1px solid #d7c9a4;background:#fff;border-radius:6px;
+  padding:3px 10px;font:600 12px var(--ui);color:#6b5314;cursor:pointer}
 #propose-bar button:hover{border-color:#a8912f}
 #propose-bar button:disabled{opacity:.6;cursor:default}
 #propose-bar .sent{font:11px var(--ui);color:#8a7c52}
@@ -362,4 +369,4 @@ body.propose.readonly .bx{cursor:pointer}
 #mode{font:600 10px var(--ui);letter-spacing:.06em;text-transform:uppercase;
   padding:3px 8px;border-radius:6px;cursor:help;white-space:nowrap}
 #mode.mode-local{background:#f2efe8;color:#7a6f57;border:1px solid #e0d9c6}
-#mode.mode-github{background:#eef4f9;color:var(--accent);border:1px solid #cfe0ee}
+#mode:empty{display:none}

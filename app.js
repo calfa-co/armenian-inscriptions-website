@@ -110,12 +110,10 @@ async function load() {
   if (CFG.propose) document.body.classList.add('propose');
   // Two deployments of the same interface differ only in where an edit goes,
   // which is invisible until you wonder why a button is missing. Say it.
+  // Only the local tool gets a badge. On the public site it stated the obvious
+  // in a colour that invited a click it did not accept.
   const mode = $('#mode');
-  if (CFG.propose) {
-    mode.className = 'mode-github';
-    mode.textContent = 'proposes to GitHub';
-    mode.title = `Edits are held in this browser until you send them to ${CFG.propose} as an issue.`;
-  } else {
+  if (CFG.api) {
     mode.className = 'mode-local';
     mode.textContent = 'local';
     mode.title = 'Edits save straight to corrections.jsonl on this computer. '
@@ -165,10 +163,9 @@ function renderHome() {
   const vols = [...new Set(NOTICES.map(n => n.volume))].sort((a, b) => a - b);
   const done = all.reviewed + all.attention;
 
-  $('#hero-sub').innerHTML = `<b>${all.n}</b> inscription notices extracted from
-    <b>${vols.length}</b> catalogue volumes, over <b>${all.pages.size}</b> scanned pages.
-    The extraction is partial and still being improved - this is where it gets checked
-    against the printed page.`;
+  $('#hero-sub').innerHTML = `<b>${all.n}</b> notices read automatically from
+    <b>${vols.length}</b> catalogue volumes and <b>${all.pages.size}</b> scanned pages.
+    Check each against its page and correct what the machine got wrong.`;
   $('#hero-bar').innerHTML = bar(all).replace(/^<div class="progress">|<\/div>$/g, '');
   // Every count here is a question - "which ones?" - so each one answers it.
   $('#hero-key').innerHTML = `
@@ -903,11 +900,12 @@ function renderBanner() {
   const sent = ids.filter(i => PENDING[i].proposed_at).length;
   const unsent = ids.length - sent;
   bar.innerHTML = `
-    ${unsent ? `<button class="link" data-goto="pending"><b>${unsent}</b> not yet sent</button>` : ''}
-    ${sent ? `<button class="link sent" data-goto="awaiting"><b>${sent}</b> submitted &mdash; GitHub usually publishes within a few minutes</button>` : ''}
-    ${here ? `<button id="pb-send">${here.proposed_at ? 'Propose again' : 'Propose this notice on GitHub'}</button>` : ''}
-    ${sent ? '<button id="pb-check">check now</button>' : ''}
-    ${here && here.proposed_at ? '<button id="pb-done" class="quiet">clear this one</button>' : ''}
+    ${unsent ? `<button class="link" data-goto="pending"><b>${unsent}</b> to send</button>` : ''}
+    ${sent ? `<button class="link" data-goto="awaiting"
+        title="Submitted to GitHub. Corrections usually appear within a few minutes."><b>${sent}</b> sent</button>` : ''}
+    ${here ? `<button id="pb-send">${here.proposed_at ? 'Send again' : 'Send to GitHub'}</button>` : ''}
+    ${sent ? '<button id="pb-check">Check</button>' : ''}
+    ${here && here.proposed_at ? '<button id="pb-done" class="quiet">clear</button>' : ''}
     <button id="pb-clear" class="quiet">discard all</button>`;
   bar.querySelectorAll('[data-goto]').forEach(b =>
     b.onclick = () => enterWork({ issue: b.dataset.goto }));
@@ -916,7 +914,7 @@ function renderBanner() {
     const n = await checkNow(chk);
     if (!n && $('#pb-check')) {
       $('#pb-check').disabled = false;
-      $('#pb-check').textContent = 'not published yet — try again shortly';
+      $('#pb-check').textContent = 'not yet — try shortly';
     }
   };
   const done = $('#pb-done');
