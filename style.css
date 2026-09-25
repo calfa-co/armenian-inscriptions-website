@@ -334,3 +334,10 @@ body.propose.readonly #draw-clear{display:flex}
 body.propose.readonly .fld textarea,body.propose.readonly .fld input{
   background:#fff;cursor:auto}
 body.propose.readonly .bx{cursor:pointer}
+
+/* Which deployment am I looking at? The two are identical except for where an
+   edit ends up, and that difference has to be legible at a glance. */
+#mode{font:600 10px var(--ui);letter-spacing:.06em;text-transform:uppercase;
+  padding:3px 8px;border-radius:6px;cursor:help;white-space:nowrap}
+#mode.mode-local{background:#f2efe8;color:#7a6f57;border:1px solid #e0d9c6}
+#mode.mode-github{background:#eef4f9;color:var(--accent);border:1px solid #cfe0ee}

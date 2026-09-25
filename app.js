@@ -97,6 +97,19 @@ async function load() {
   NOTICES = d.notices; CORR = d.corrections || {};
   if (CFG.readOnly) document.body.classList.add('readonly');
   if (CFG.propose) document.body.classList.add('propose');
+  // Two deployments of the same interface differ only in where an edit goes,
+  // which is invisible until you wonder why a button is missing. Say it.
+  const mode = $('#mode');
+  if (CFG.propose) {
+    mode.className = 'mode-github';
+    mode.textContent = 'proposes to GitHub';
+    mode.title = `Edits are held in this browser until you send them to ${CFG.propose} as an issue.`;
+  } else {
+    mode.className = 'mode-local';
+    mode.textContent = 'local';
+    mode.title = 'Edits save straight to corrections.jsonl on this computer. '
+               + 'They do not reach GitHub from here.';
+  }
   const vols = [...new Set(NOTICES.map(n => n.volume))].sort((a, b) => a - b);
   $('#vols').innerHTML = '<button data-v="" class="on">All</button>' +
     vols.map(v => `<button data-v="${esc(v)}">${esc(v)}</button>`).join('');

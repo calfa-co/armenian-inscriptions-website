@@ -2,7 +2,7 @@
 window.RVW = {
   api: null,          // read-only: the client makes no write requests
   data: "data",
-  images: "https://IMAGES-HOST/inscriptions",
+  images: "https://armenian-catalogs.s3.eu-west-par.io.cloud.ovh.net/inscriptions",
   propose: "calfa-co/armenian-inscriptions-data",
   readOnly: true,
 };
