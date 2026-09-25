@@ -371,6 +371,9 @@ function select(id) {
         [['unreviewed', '&mdash;'], ['accepted', 'Correct'], ['corrected', 'Fixed'], ['rejected', 'Wrong']],
         cropStatusOf(n))}</div>
       <span class="saved" id="saved">Saved</span>
+      ${PENDING[n.id] && PENDING[n.id].review_status === 'reviewed'
+          && !(CORR[n.id] || {}).review_status
+        ? '<span class="auto-rev" title="Correcting a notice marks it reviewed. Change it if you only fixed part of it.">marked reviewed by your edit</span>' : ''}
     </div>`;
 
   $('#pane-text').innerHTML = `
@@ -809,6 +812,16 @@ function reconcilePending() {
 }
 function stage(id, payload) {
   const p = PENDING[id] || (PENDING[id] = { id, fields: {} });
+  // Correcting a notice IS reviewing it - you cannot fix a transcription without
+  // having read it against the page. So the first substantive edit marks it
+  // reviewed, rather than making someone state the obvious in a second click.
+  // Only as a default: an explicit choice, including Needs attention, wins, and
+  // it never overrides a state already recorded in the published data.
+  const substantive = Object.keys(payload.fields || {}).length || 'crop' in payload;
+  if (substantive && !payload.review_status && !p.review_status
+      && !(CORR[id] || {}).review_status) {
+    p.review_status = 'reviewed';
+  }
   for (const [k, v] of Object.entries(payload.fields || {})) {
     if (v === null) delete p.fields[k]; else p.fields[k] = v;
   }

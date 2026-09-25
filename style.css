@@ -138,11 +138,26 @@ tr.sel td:first-child::after{content:"";position:absolute;inset:0 auto 0 0;width
 .seg .grp button{border:0;background:transparent;border-radius:6px;padding:4px 10px;
   font:500 12.5px var(--ui);color:var(--ink-2);cursor:pointer;transition:.12s;white-space:nowrap}
 .seg .grp button:hover{color:var(--ink)}
+/* The chosen state is FILLED, not a white pill on a grey track. "Unreviewed" is
+   the default and already looked selected, so picking a real state moved a pale
+   pill one slot and changed a colour you had to hunt for - people clicked and
+   could not tell whether anything had happened. */
 .seg .grp button.on{background:#fff;box-shadow:var(--sh);font-weight:600}
-.seg .grp button.on[data-rev=reviewed],.seg .grp button.on[data-crop=accepted]{color:var(--ok)}
-.seg .grp button.on[data-rev=needs_attention],.seg .grp button.on[data-crop=rejected]{color:var(--bad)}
-.seg .grp button.on[data-crop=corrected]{color:var(--human)}
+.seg .grp button.on[data-rev=unreviewed],
+.seg .grp button.on[data-crop=unreviewed]{color:var(--ink-2)}
+.seg .grp button.on[data-rev=reviewed],
+.seg .grp button.on[data-crop=accepted]{background:var(--ok);color:#fff;
+  box-shadow:0 1px 3px rgba(15,122,77,.4)}
+.seg .grp button.on[data-rev=needs_attention],
+.seg .grp button.on[data-crop=rejected]{background:var(--bad);color:#fff;
+  box-shadow:0 1px 3px rgba(176,39,29,.4)}
+.seg .grp button.on[data-crop=corrected]{background:var(--human);color:#fff;
+  box-shadow:0 1px 3px rgba(107,70,193,.4)}
+/* A press should be felt before the re-render lands. */
+.seg .grp button:active{transform:scale(.95)}
 .saved{font:12px var(--ui);color:var(--ok);opacity:0;transition:opacity .2s}
+.auto-rev{font:11px var(--ui);color:var(--ok);background:#e6f4ec;border-radius:5px;
+  padding:2px 8px;cursor:help}
 .saved.show{opacity:1}
 
 .card{background:var(--card);border:1px solid var(--rule);border-radius:10px;padding:12px 14px;
