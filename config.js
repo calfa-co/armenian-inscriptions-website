@@ -4,5 +4,6 @@ window.RVW = {
   data: "data",
   images: "https://armenian-catalogs.s3.eu-west-par.io.cloud.ovh.net/inscriptions",
   propose: "calfa-co/armenian-inscriptions-data",
+  live: "https://raw.githubusercontent.com/calfa-co/armenian-inscriptions-data/main/corrections.json",
   readOnly: true,
 };

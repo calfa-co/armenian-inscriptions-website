@@ -9,6 +9,7 @@ const CFG = Object.assign({
   data: null,         // directory of committed notices.json / corrections.json
   images: null,       // base URL of the page scans; null = this server
   propose: null,      // "owner/repo": edits become a prefilled GitHub issue
+  live: null,         // raw URL of the data repo's corrections.json
   readOnly: false,
 }, window.RVW || {});
 
@@ -95,6 +96,17 @@ async function load() {
     : { notices: await (await fetch(`${CFG.data}/notices.json`)).json(),
         corrections: await (await fetch(`${CFG.data}/corrections.json`)).json() };
   NOTICES = d.notices; CORR = d.corrections || {};
+
+  // Corrections come from the data repository itself, not from the copy that
+  // shipped with this page, so one that was applied five minutes ago is already
+  // here. The bundled copy is the fallback for when that fetch fails.
+  if (CFG.live) {
+    try {
+      const r = await fetch(CFG.live, { cache: 'no-cache' });
+      if (r.ok) CORR = await r.json();
+    } catch (_) { /* keep the bundled snapshot */ }
+  }
+  reconcilePending();
   if (CFG.readOnly) document.body.classList.add('readonly');
   if (CFG.propose) document.body.classList.add('propose');
   // Two deployments of the same interface differ only in where an edit goes,
@@ -668,6 +680,19 @@ const refit = () => {
 };
 addEventListener('resize', refit);
 
+// Coming back to the tab is the moment a correction is most likely to have
+// landed - the issue was just filed in the other one.
+addEventListener('visibilitychange', async () => {
+  if (document.hidden || !CFG.live || !Object.keys(PENDING).length) return;
+  try {
+    const r = await fetch(CFG.live, { cache: 'no-cache' });
+    if (!r.ok) return;
+    CORR = await r.json();
+    reconcilePending();
+    render(); renderBanner(); if (SEL) select(SEL);
+  } catch (_) {}
+});
+
 // ---------------------------------------------------------------- splitters
 // Widths persist: how much list you want against how much page depends on
 // whether you are scanning or reading, and re-dragging it every session is
@@ -715,6 +740,24 @@ async function save(id, payload) {
 }
 
 // ------------------------------------------------- proposals (public site)
+// A correction stops being "unsubmitted" when it turns up in the published
+// data, not when the issue form opens - we never learn whether someone pressed
+// Create. Comparing against what actually landed is the only honest signal, and
+// it is what stops the same fix being proposed twice.
+function reconcilePending() {
+  let changed = false;
+  for (const [id, p] of Object.entries(PENDING)) {
+    const live = CORR[id];
+    if (!live) continue;
+    const fieldsDone = Object.entries(p.fields || {})
+      .every(([k, v]) => (live.fields || {})[k] === v);
+    const cropDone = !p.crop || (live.crop
+      && live.crop.page === p.crop.page
+      && String(live.crop.box) === String(p.crop.box));
+    if (fieldsDone && cropDone) { delete PENDING[id]; changed = true; }
+  }
+  if (changed) savePending();
+}
 function stage(id, payload) {
   const p = PENDING[id] || (PENDING[id] = { id, fields: {} });
   for (const [k, v] of Object.entries(payload.fields || {})) {
@@ -759,6 +802,8 @@ async function propose(id) {
   const n = NOTICES.find(x => x.id === id), p = PENDING[id];
   if (!n || !p) return;
   const url = issueURL(n, p);
+  p.proposed_at = new Date().toISOString();
+  savePending(); renderBanner();
   if (url.length < 8000) { open(url, '_blank', 'noopener'); return; }
   // Above GitHub's cap the query string 414s, so hand it over by clipboard.
   try {
@@ -779,9 +824,14 @@ function renderBanner() {
   bar.hidden = !CFG.propose || !ids.length;
   if (bar.hidden) return;
   const here = SEL && PENDING[SEL];
-  bar.innerHTML = `<b>${ids.length}</b> unsubmitted correction${ids.length > 1 ? 's' : ''}
-    ${here ? '<button id="pb-send">Propose this notice on GitHub</button>' : ''}
+  const sent = ids.filter(i => PENDING[i].proposed_at).length;
+  bar.innerHTML = `<b>${ids.length}</b> correction${ids.length > 1 ? 's' : ''} not yet in the data
+    ${sent ? `<span class="sent">${sent} awaiting GitHub</span>` : ''}
+    ${here ? `<button id="pb-send">${here.proposed_at ? 'Propose again' : 'Propose this notice on GitHub'}</button>` : ''}
+    ${here && here.proposed_at ? '<button id="pb-done" class="quiet">already applied &mdash; clear it</button>' : ''}
     <button id="pb-clear" class="quiet">discard all</button>`;
+  const done = $('#pb-done');
+  if (done) done.onclick = () => { delete PENDING[SEL]; savePending(); select(SEL); renderBanner(); };
   const send = $('#pb-send');
   if (send) send.onclick = () => propose(SEL);
   $('#pb-clear').onclick = () => {
