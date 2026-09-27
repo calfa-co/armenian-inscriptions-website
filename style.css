@@ -314,7 +314,10 @@ button.link:hover{background:#f0ede6;color:var(--ink)}
 .vcard .vn{display:flex;align-items:baseline;gap:8px;margin-bottom:3px}
 .vcard .vn b{font:600 26px/1 var(--ui);letter-spacing:-.02em}
 .vcard .vn span{font:600 11px var(--ui);letter-spacing:.06em;text-transform:uppercase;color:var(--mut)}
-.vcard .cnt{font:13px var(--ui);color:var(--ink-2);margin-bottom:12px}
+.vcard .vtitle{font:600 13.5px/1.35 var(--arm);color:var(--ink);margin:2px 0 3px}
+.vcard .ved{font:11px/1.4 var(--ui);color:var(--mut);margin-bottom:9px}
+.vcard .cnt{font:12.5px var(--ui);color:var(--ink-2);margin-bottom:12px}
+.vname{font-family:var(--arm);color:var(--ink-2);cursor:help}
 .vcard .progress{height:6px}
 .vcard .vstats{margin-top:11px;display:flex;flex-direction:column;gap:4px;
   font:12px var(--ui);color:var(--mut)}

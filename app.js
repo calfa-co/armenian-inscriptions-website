@@ -133,6 +133,22 @@ async function load() {
   if (Object.values(PENDING).some(p => p.proposed_at)) startPolling();
 }
 
+// Read off each volume's own title page, not from memory: these are the
+// scholarly titles of the Divan and getting a district wrong would misdescribe
+// which inscriptions a reader is about to work on.
+const VOLUMES = {
+  '1':  ['\u0531\u0546\u053b \u0554\u0531\u0542\u0531\u0554', '\u0540. \u0531. \u0555\u0580\u0562\u0565\u056c\u056b', 1966],
+  '2':  ['\u0533\u0578\u0580\u056b\u057d\u056b, \u054d\u056b\u057d\u056b\u0561\u0576\u056b \u0587 \u0542\u0561\u0583\u0561\u0576\u056b \u0577\u0580\u057b\u0561\u0576\u0576\u0565\u0580', '\u054d. \u0533. \u0532\u0561\u0580\u056d\u0578\u0582\u0564\u0561\u0580\u0575\u0561\u0576', 1960],
+  '3':  ['\u054e\u0561\u0575\u0578\u0581 \u0571\u0578\u0580 \u2014 \u0535\u0572\u0565\u0563\u0576\u0561\u0571\u0578\u0580\u056b \u0587 \u0531\u0566\u056b\u0566\u0562\u0565\u056f\u0578\u057e\u056b \u0577\u0580\u057b\u0561\u0576\u0576\u0565\u0580', '\u054d. \u0533. \u0532\u0561\u0580\u056d\u0578\u0582\u0564\u0561\u0580\u0575\u0561\u0576', 1967],
+  '4':  ['\u0533\u0565\u0572\u0561\u0580\u0584\u0578\u0582\u0576\u056b\u0584 \u2014 \u053f\u0561\u0574\u0578\u0575\u056b, \u0544\u0561\u0580\u057f\u0578\u0582\u0576\u0578\u0582 \u0587 \u054e\u0561\u0580\u0564\u0565\u0576\u056b\u057d\u056b \u0577\u0580\u057b\u0561\u0576\u0576\u0565\u0580', '\u054d. \u0533. \u0532\u0561\u0580\u056d\u0578\u0582\u0564\u0561\u0580\u0575\u0561\u0576', 1973],
+  '5':  ['\u0531\u0580\u0581\u0561\u056d', '\u054d. \u0533. \u0532\u0561\u0580\u056d\u0578\u0582\u0564\u0561\u0580\u0575\u0561\u0576', 1982],
+  '6':  ['\u053b\u057b\u0587\u0561\u0576\u056b \u0577\u0580\u057b\u0561\u0576', '\u054d. \u0531. \u0531\u057e\u0561\u0563\u0575\u0561\u0576, \u0540. \u0544. \u054b\u0561\u0576\u0583\u0578\u056c\u0561\u0564\u0575\u0561\u0576', 1977],
+  '7':  ['\u0548\u0582\u056f\u0580\u0561\u056b\u0576\u0561, \u0544\u0578\u056c\u0564\u0578\u057e\u0561', '\u0533. \u0544. \u0533\u0580\u056b\u0563\u0578\u0580\u0575\u0561\u0576', 1996],
+  '8':  ['\u054c\u0578\u0582\u057d\u0561\u057d\u057f\u0561\u0576\u056b \u0534\u0561\u0577\u0576\u0578\u0582\u0569\u0575\u0578\u0582\u0576', '\u0533\u0580. \u0544. \u0533\u0580\u056b\u0563\u0578\u0580\u0575\u0561\u0576', 1999],
+  '9':  ['\u053c\u0578\u057c\u0578\u0582 \u0574\u0561\u0580\u0566', '\u054d. \u0533. \u0532\u0561\u0580\u056d\u0578\u0582\u0564\u0561\u0580\u0575\u0561\u0576, \u053f. \u0542. \u0542\u0561\u0586\u0561\u0564\u0561\u0580\u0575\u0561\u0576, \u054d. \u054f. \u054d\u0561\u0572\u0578\u0582\u0574\u0575\u0561\u0576', 2012],
+  '10': ['\u0547\u056b\u0580\u0561\u056f\u056b \u0574\u0561\u0580\u0566', '\u054d. \u0533. \u0532\u0561\u0580\u056d\u0578\u0582\u0564\u0561\u0580\u0575\u0561\u0576', 2017],
+};
+
 // ---------------------------------------------------------------- overview
 // The first screen answers what you arrive wanting to know - how much is
 // extracted, how much is checked, where the damage is - and is the way in.
@@ -180,8 +196,11 @@ function renderHome() {
 
   $('#vol-cards').innerHTML = vols.map(v => {
     const s = stats(NOTICES.filter(n => n.volume === v));
+    const [title, ed, year] = VOLUMES[v] || ['', '', ''];
     return `<button class="vcard" data-vol="${esc(v)}">
       <div class="vn"><b>${esc(v)}</b><span>Volume</span></div>
+      ${title ? `<div class="vtitle">${esc(title)}</div>
+        <div class="ved">${esc(ed)} &middot; ${year}</div>` : ''}
       <div class="cnt">${s.n} notices &middot; ${s.pages.size} pages</div>
       ${bar(s)}
       <div class="vstats">
@@ -366,7 +385,8 @@ function select(id) {
       <div class="id">${esc(n.id)}</div>
       <h2>${eff(n, 'monument') ? esc(eff(n, 'monument'))
             : '<span style="color:var(--mut);font-family:var(--ui);font-size:15px">no monument extracted</span>'}</h2>
-      <div class="meta">volume ${esc(n.volume)} &nbsp;&middot;&nbsp; page ${esc(eff(n, 'page'))}
+      <div class="meta">${VOLUMES[n.volume]
+        ? `<span class="vname" title="${esc((VOLUMES[n.volume][1] || '') + ', ' + (VOLUMES[n.volume][2] || ''))}">${esc(VOLUMES[n.volume][0])}</span> &nbsp;&middot;&nbsp; ` : ''}volume ${esc(n.volume)} &nbsp;&middot;&nbsp; page ${esc(eff(n, 'page'))}
         &nbsp;&middot;&nbsp; &#8470; ${esc(eff(n, 'numero'))} &nbsp;&middot;&nbsp; ${esc(n.source_csv)}</div>
     </div>
     <div class="bar">
