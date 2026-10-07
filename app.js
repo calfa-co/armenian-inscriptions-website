@@ -318,7 +318,7 @@ function renderHome() {
     <div><b>${vols.length}</b><span>volumes</span></div>
     <div><b>${fmtN(all.pages.size)}</b><span>printed pages</span></div>`;
   $('.silver span').innerHTML = `Texts were machine-read from the printed volumes and may contain errors;
-    ${fmtN(all.reviewed)} have been checked so far. The page scan is authoritative.
+    ${fmtN(all.reviewed)} have been checked by specialists so far. The page scan is authoritative.
     <a href="#/about/method">About the data</a>`;
   $('#vol-table tbody').innerHTML = vols.map(v => {
     const [title, , year] = VOLUMES[v] || ['', '', ''];
@@ -352,8 +352,8 @@ const FLAGS = {
   crop_auto: ['Facsimile box auto-paired', 'paired in reading order'],
   crop_human: ['Facsimile box set by hand', 'adjusted by an editor'],
   edited: ['Corrected', 'at least one field changed by a specialist'],
-  pending: ['My unsent corrections', 'kept in this browser'],
-  awaiting: ['My sent corrections', 'submitted, not yet published'],
+  pending: ['My corrections, not submitted', 'saved in this browser only: open each and press Send to GitHub'],
+  awaiting: ['My corrections, submitted', 'GitHub issue opened, waiting to be validated and published'],
 };
 
 function renderDash() {
@@ -487,7 +487,7 @@ function rowTags(n) {
   if (rv === 'reviewed') out.push('<span class="tag t-ok">checked</span>');
   if (rv === 'needs_attention') out.push('<span class="tag t-warn">flagged</span>');
   if (anyEdit(n)) out.push('<span class="tag t-human">corrected</span>');
-  if (PENDING[n.id]) out.push(`<span class="tag t-human">${PENDING[n.id].proposed_at ? 'sent' : 'unsent'}</span>`);
+  if (PENDING[n.id]) out.push(`<span class="tag t-human">${PENDING[n.id].proposed_at ? 'submitted' : 'not submitted'}</span>`);
   return out.join('');
 }
 
@@ -572,7 +572,7 @@ function citation(n) {
   const ed = vt ? ` (${surname(v)} ${vt[2]})` : '';
   const today = new Date().toISOString().slice(0, 10);
   return `Divan hay vimagrutʻyan ${roman(v)}${ed}, p. ${pub(n, 'page')}, no. ${pub(n, 'numero')}. `
-    + `Armenian Inscriptions, Calfa, record ${n.id}, ${permalink(n)} `
+    + `Corpus Inscriptionum Armenicarum Digitale, Calfa, record ${n.id}, ${permalink(n)} `
     + `(${STATUS(n)[2]}; accessed ${today}). CC BY-SA 4.0.`;
 }
 
@@ -762,7 +762,9 @@ function renderReadText(n, mine) {
     ? `<dd class="${cls}">${esc(v)}</dd>` : '<dd><span class="void">—</span></dd>';
 
   $('#pane-text').innerHTML = `
-    ${mine ? `<div class="unsent-note">You have ${mine.proposed_at ? 'sent, not yet published,' : 'unsent'} changes to this notice.
+    ${mine ? `<div class="unsent-note">${mine.proposed_at
+      ? 'Your correction to this notice was submitted as a GitHub issue. It appears here once it has been validated and published, usually within minutes.'
+      : 'You corrected this notice, but the correction is saved in this browser only. Open it and press Send to GitHub to submit it.'}
       <button class="link" id="un-edit">Edit</button>${mine.proposed_at ? '' : ' · <button class="link" id="un-discard">Discard</button>'}</div>` : ''}
     <dl class="rec">
       <dt>Location and description ${mk('monument') || mk('description')}</dt>
@@ -795,7 +797,8 @@ function renderReadText(n, mine) {
       <span>Source</span><b>${volShort(n.volume)}${VOLUMES[n.volume] ? ` (${esc(surname(n.volume))} ${VOLUMES[n.volume][2]})` : ''}, p. ${esc(pub(n, 'page'))}, no. ${esc(pub(n, 'numero'))}</b>
       <span>Page scan</span><b>${n.pages.map(p => `<a href="${pageURL(p)}" target="_blank" rel="noopener">${esc(p)}</a>`).join(', ')}</b>
       <span>Extraction</span><b>machine-read (vision-language model)</b>
-      <span>Facsimile box</span><b>${src === 'editor' ? 'adjusted by an editor' : src === 'detector' ? 'detected automatically' : 'none'}</b>
+      <span>Facsimile box</span><b>${src === 'editor' ? 'adjusted by an editor' : src === 'detector' ? 'detected automatically'
+        : candidates(n, n.pages[0]).length ? 'drawings detected on the page, not yet matched' : 'none'}</b>
       ${c && (c.review_status !== 'unreviewed' || anyEdit(n)) && byWhom(n) ? `<span>Corrections</span><b>${esc(byWhom(n))}</b>` : ''}
       <span>Record</span><b>${esc(n.id)}</b>
       ${CFG.propose ? `<span></span><b><a href="${esc(reportURL(n))}" target="_blank" rel="noopener">Report a problem</a>
@@ -900,6 +903,7 @@ function renderPage(n, pid) {
           >${esc(p.replace(/^CatInsc_\d+_0*/, 'scan '))}${ec && ec.page === p ? ' &#9679;' : ''}</button>`).join('')}</div>` : '';
 
   const yolo = EDITING && pid === n.pages[0] ? n.yolo_boxes : [];
+  const cands = candidates(n, pid);
   const isEff = b => ec && ec.page === pid && ec.box.join() === b.join();
   const pcBox = b => `left:${100 * b[0] / geo.width}%;top:${100 * b[1] / geo.height}%;` +
                      `width:${100 * (b[2] - b[0]) / geo.width}%;height:${100 * (b[3] - b[1]) / geo.height}%`;
@@ -924,13 +928,14 @@ function renderPage(n, pid) {
         ${tabs}
         <a class="vopen" href="${pageURL(pid)}" target="_blank" rel="noopener">Full scan &#8599;</a>
       </div>
-      ${ec ? cropStrip(n, ec) : ''}
+      ${ec ? cropStrip(n, ec) : cands.length ? candStrip(n, pid, cands) : ''}
       <div class="pageview" id="pv"><div class="stage" id="stage">
         <img src="${pageURL(pid)}" alt="Page ${esc(pid)}" draggable="false">
         ${yolo.filter(b => !isEff(b.box)).map(b =>
           `<div class="bx" data-box="${b.box.join(',')}" style="${pcBox(b.box)}"
              title="detection, confidence ${b.conf} — click to use this box"><label>${b.conf}</label></div>`).join('')}
         ${effBox}
+        ${cands.map(b => `<div class="bx cand" style="${pcBox(b.box)}"></div>`).join('')}
       </div></div>
       ${EDITING ? `<div class="pvmeta">
         <span>${esc(pid)} · ${geo.width}&times;${geo.height} px</span>
@@ -946,20 +951,39 @@ function renderPage(n, pid) {
     </div>`;
 
   wirePage(n, pid, geo);
+  $('#pane-page').querySelectorAll('[data-ci]').forEach(b => b.onclick = () => {
+    const i = +b.dataset.ci, box = cands[i].box, pv = $('#pv');
+    $('#stage').querySelectorAll('.bx.cand').forEach((el, j) => el.classList.toggle('hi', j === i));
+    $('#pane-page').querySelectorAll('[data-ci]').forEach((el, j) => el.classList.toggle('on', j === i));
+    pv.scrollTo({ top: Math.max(0, box[1] * PV.scale - 30), left: Math.max(0, box[0] * PV.scale - 30), behavior: 'smooth' });
+  });
 }
 
 // A crop is coordinates, so the browser cuts it out of the page scan with CSS.
+const cropWin = (g, pid, [x1, y1, x2, y2]) => {
+  const cw = x2 - x1, ch = y2 - y1;
+  return `<div class="cropwin" style="aspect-ratio:${cw} / ${ch}">
+    <img src="${pageURL(pid)}" alt="Facsimile drawing from ${esc(pid)}"
+         style="width:${100 * g.width / cw}%;left:${-100 * x1 / cw}%;top:${-100 * y1 / ch}%"></div>`;
+};
 function cropStrip(n, ec) {
   const g = n.page_geometry[ec.page];
   if (!g) return '';
-  const [x1, y1, x2, y2] = ec.box;
-  const cw = x2 - x1, ch = y2 - y1;
   return `<div class="cropstrip">
     <span class="cap">Facsimile drawing · ${cropSource(n) === 'editor' ? 'box adjusted by an editor' : 'detected automatically'}</span>
-    <div class="cropwin" style="aspect-ratio:${cw} / ${ch}">
-      <img src="${pageURL(ec.page)}" alt="Facsimile drawing from ${esc(ec.page)}"
-           style="width:${100 * g.width / cw}%;left:${-100 * x1 / cw}%;top:${-100 * y1 / ch}%">
-    </div></div>`;
+    ${cropWin(g, ec.page, ec.box)}</div>`;
+}
+// When the detector found drawings on the page but could not tell which one
+// belongs to this notice, the reader still gets to see them - as candidates,
+// never as the notice's own facsimile.
+const candidates = (n, pid) => !EDITING && !effCrop(n) && cropStatusOf(n) !== 'rejected'
+  && pid === n.pages[0] ? (n.yolo_boxes || []) : [];
+function candStrip(n, pid, boxes) {
+  const g = n.page_geometry[pid];
+  return `<div class="cropstrip cands">
+    <span class="cap">${boxes.length} drawing${boxes.length > 1 ? 's' : ''} detected on this page · not yet matched to this notice</span>
+    <div class="cands-row">${boxes.map((b, i) =>
+      `<button class="cand" data-ci="${i}" title="Show on the page">${cropWin(g, pid, b.box)}</button>`).join('')}</div></div>`;
 }
 
 function wirePage(n, pid, geo) {
@@ -1362,17 +1386,18 @@ function renderBanner() {
   const unsent = ids.length - sent;
   badge.hidden = !CFG.propose || EDITING || !ids.length;
   if (!badge.hidden) {
-    badge.textContent = unsent ? `${unsent} unsent` : `${sent} sent`;
-    badge.title = unsent ? 'Corrections kept in this browser, not yet sent to GitHub'
-                         : 'Submitted to GitHub, not yet published';
+    badge.textContent = unsent ? `${unsent} correction${unsent > 1 ? 's' : ''} not submitted`
+                               : `${sent} awaiting publication`;
+    badge.title = unsent ? 'Saved in this browser only. Open them and press Send to GitHub.'
+                         : 'Submitted as GitHub issues; they appear once validated, usually within minutes.';
     badge.onclick = () => go(`#/browse?flag=${unsent ? 'pending' : 'awaiting'}`);
   }
   bar.hidden = !CFG.propose || !EDITING || !ids.length;
   if (bar.hidden) return;
   bar.innerHTML = `
-    ${unsent ? `<button class="link" data-goto="pending"><b>${unsent}</b> unsent</button>` : ''}
+    ${unsent ? `<button class="link" data-goto="pending" title="Saved in this browser only. Press Send to GitHub on each notice."><b>${unsent}</b> not submitted</button>` : ''}
     ${sent ? `<button class="link" data-goto="awaiting"
-        title="Submitted to GitHub. Corrections usually appear within a few minutes."><b>${sent}</b> sent</button>` : ''}
+        title="Submitted as GitHub issues. They appear once validated, usually within a few minutes."><b>${sent}</b> awaiting publication</button>` : ''}
     ${sent ? '<button class="btn" id="pb-check">Refresh</button>' : ''}
     ${SEL && PENDING[SEL] && PENDING[SEL].proposed_at ? '<button class="btn" id="pb-done">Dismiss</button>' : ''}
     <button class="link end" id="pb-clear">Discard all</button>`;
@@ -1514,7 +1539,7 @@ async function provenance() {
 function exportMeta(rows, vals, scopeLabel = '') {
   const p = PROV || {};
   return {
-    title: 'Armenian Inscriptions: Divan of Armenian Inscriptions, vols I–X (machine-read)',
+    title: 'Corpus Inscriptionum Armenicarum Digitale (Divan Hay Vimagrutʻyan, vols I–X, machine-read)',
     publisher: 'Calfa', site: SITE, licence: 'CC BY-SA 4.0',
     licence_url: 'https://creativecommons.org/licenses/by-sa/4.0/',
     generated_at: new Date().toISOString(),
@@ -1589,15 +1614,15 @@ function renderData(params) {
   provenance().then(renderSources);
 
   $('#fields-dict').innerHTML = `<thead><tr><th>Field</th><th>Content</th></tr></thead><tbody>${[
-    ['id', 'Record identifier, derived from volume and number at extraction. Used in permalinks; may change while volume and number are corrected.'],
+    ['id', 'Record identifier, used in permalinks.'],
     ['volume, volume_title, volume_year', 'Volume of the Divan, its title and year of publication.'],
     ['page, numero', 'Printed page and number of the notice in the volume.'],
     ['monument', 'Lemma: the opening words of the printed notice, usually a locator that continues into the description.'],
     ['description', 'Location of the inscription and description of its support, as printed.'],
-    ['transcription', 'Diplomatic text with the editorial signs as printed. Line breaks mostly follow the printed page, not the stone; “/” marks line division where the edition gives it.'],
+    ['transcription', 'Diplomatic text with the editorial signs as printed.'],
     ['nb_lignes', 'Number of lines, as stated by the editor.'],
     ['reference', 'Previous editions (Հրատ.) and photographs (Լուսանկ.), as printed.'],
-    ['note', 'Editor’s note; occasionally a translation (Թարգմ.).'],
+    ['note', 'Editor’s note.'],
     ['*_machine', 'With “Both”: the machine extraction of each field, whether or not it was corrected.'],
     ['review_status', 'unreviewed, reviewed (checked against the scan) or needs_attention (flagged).'],
     ['corrected_fields, corrected_by, corrected_at', 'Fields changed by a specialist, with the contributor and date recorded in the data repository.'],
@@ -1609,11 +1634,6 @@ function renderData(params) {
 
 function renderSources() {
   const p = PROV || { notices: {}, corrections: {} };
-  const dup = (() => {
-    const c = new Map();
-    NOTICES.forEach(n => { const k = n.volume + '|' + n.numero; c.set(k, (c.get(k) || 0) + 1); });
-    return [...c.values()].filter(x => x > 1).length;
-  })();
   const repo = CFG.propose ? `https://github.com/${CFG.propose}` : null;
   $('#srcs').innerHTML = `<table class="tbl">
     <tr><td>Machine extraction</td><td>
@@ -1629,14 +1649,7 @@ function renderSources() {
     <tr><td>Page scans</td><td><code>${esc(CFG.images || '/page')}/vol&lt;n&gt;/&lt;scan&gt;.jpg</code>
       <span class="state">· full resolution, linked from each record</span></td></tr>
   </table>
-  <h3 class="h3">Known limitations</h3>
-  <ul class="prose small">
-    <li>Records are machine-read and largely unchecked; the printed page is authoritative.</li>
-    <li>The site (village, monastery) under which a notice is printed is not extracted.</li>
-    <li>Identifiers follow the extracted numbering: ${fmtN(dup)} volume/number pairs occur more than once.</li>
-    <li><code>reference</code> mixes previous editions and photographs; <code>note</code> occasionally holds a translation.</li>
-    <li>Line breaks in <code>transcription</code> mostly reproduce the printed page; overlines marking abbreviations and numerals are not reproduced.</li>
-  </ul>`;
+`;
 }
 
 // ---------------------------------------------------------------- about
@@ -1650,7 +1663,7 @@ function renderAbout(sec) {
         <span class="arm">${esc(t)}</span> [Divan of Armenian Inscriptions ${roman(v)}: ${esc(en)}]. Yerevan, ${y}.</li>`;
     }).join('');
     $('#cite-example').textContent = 'Divan hay vimagrutʻyan V (Barkhudaryan 1982), p. 20, no. 27. '
-      + `Armenian Inscriptions, Calfa, record v5-n27, ${SITE}#/notice/v5-n27 `
+      + `Corpus Inscriptionum Armenicarum Digitale, Calfa, record v5-n27, ${SITE}#/notice/v5-n27 `
       + '(machine-read, not yet checked; accessed 2026-10-07). CC BY-SA 4.0.';
   }
   if (LOADED) $('#artsakh-count').textContent = `· ${fmtN(NOTICES.filter(n => n.volume === '5').length)} notices`;
@@ -1681,6 +1694,13 @@ $('#q').oninput = () => {
 $('#q').onkeydown = e => { if (e.key === 'Enter' && LOADED) { clearTimeout(qt); setFilter({ q: $('#q').value.trim() }); } };
 $('#fvol').onchange = () => setFilter({ vol: $('#fvol').value });
 $('#fstatus').onchange = () => setFilter({ status: $('#fstatus').value });
+$('#home-search').onsubmit = e => {
+  e.preventDefault();
+  const q = $('#hq').value.trim();
+  if (!LOADED) return;
+  $('#q').value = q;
+  setFilter({ q });
+};
 
 route();
 load().catch(err => {

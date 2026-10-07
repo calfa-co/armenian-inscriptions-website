@@ -50,21 +50,43 @@ button.link:hover{text-decoration:underline}
 header{display:flex;gap:10px 22px;align-items:center;flex-wrap:wrap;padding:10px 22px;
   background:#fff;border-bottom:1px solid var(--rule);position:relative;z-index:10}
 a.brand{display:flex;gap:12px;align-items:center;text-decoration:none;color:var(--ink)}
-.calfa{height:26px;width:auto;display:block}
-.brand .rule{width:1px;height:28px;background:var(--rubric);opacity:.7}
-.brand .title{display:flex;flex-direction:column;line-height:1.2}
+.calfa{height:22px;width:auto;display:block;opacity:.9}
+.calfa-link{display:block}
+.mark{width:22px;height:28px;flex:none;color:var(--ink)}
+.mark path,.mark circle{fill:none;stroke-linecap:round;stroke-linejoin:round}
+.mark .m-stone,.mark .m-base{stroke:currentColor;stroke-width:1.8}
+.mark .m-cross{stroke:var(--rubric);stroke-width:2.4}
+.mark .m-dot{fill:var(--rubric);stroke:none}
+.mark .m-line{stroke:currentColor;stroke-width:1.4;opacity:.75}
+.mark.big{width:46px;height:58px}
+.brand .title{display:flex;flex-direction:column;line-height:1.25}
 .brand .title b{font:600 15px var(--ui);letter-spacing:-.005em}
-.brand .title i{font:400 11.5px var(--ui);font-style:normal;color:var(--mut)}
+.brand .title i{font:400 12px var(--ui);font-style:normal;color:var(--mut)}
+.brand .title i .arm{font-size:12.5px}
 nav.top{display:flex;gap:2px}
 nav.top a{padding:6px 10px;font:500 13.5px var(--ui);color:var(--ink-2);text-decoration:none;
   border-bottom:2px solid transparent}
 nav.top a:hover{color:var(--ink)}
 nav.top a.on{color:var(--accent);border-bottom-color:var(--accent)}
 nav.top a.minor{color:var(--mut)}
-.search{position:relative;flex:1;min-width:200px;max-width:380px;margin-left:auto}
+.search{position:relative;flex:1;min-width:220px;max-width:520px;margin-left:auto}
+body[data-view=home] .search{visibility:hidden}
 .search svg{position:absolute;left:9px;top:50%;transform:translateY(-50%);width:15px;height:15px;
   fill:none;stroke:var(--mut);stroke-width:1.6;stroke-linecap:round;pointer-events:none}
-.search input{width:100%;padding:7px 10px 7px 30px}
+.search input{width:100%;padding:9px 12px 9px 34px;font-size:14px;background:var(--bg-2);border-color:var(--rule)}
+.search input:focus{background:#fff}
+.search svg{left:11px;width:16px;height:16px;stroke:var(--ink-2)}
+.hero{display:flex;gap:18px;align-items:center;margin-bottom:14px}
+.hero h1.h1{margin:0 0 2px}
+.h1-sub{font-size:15px;color:var(--ink-2)}
+.h1-sub .arm{font-size:16px}
+.bigsearch{position:relative;display:flex;gap:8px;max-width:720px;margin:22px 0 6px}
+.bigsearch svg{position:absolute;left:14px;top:50%;transform:translateY(-50%);width:18px;height:18px;
+  fill:none;stroke:var(--ink-2);stroke-width:1.6;stroke-linecap:round;pointer-events:none}
+.bigsearch input{flex:1;font-size:16px;padding:12px 14px 12px 42px;border:1.5px solid var(--ink-2);border-radius:var(--r)}
+.bigsearch input:focus{border-color:var(--accent)}
+.bigsearch .btn{padding:0 20px;font-size:14px}
+.search-hint{margin:0 0 22px}
 #mode{font:600 10px var(--ui);letter-spacing:.06em;text-transform:uppercase;
   padding:3px 8px;border-radius:var(--r);cursor:help;white-space:nowrap;
   background:var(--bg-2);color:var(--mut);border:1px solid var(--rule)}
@@ -291,6 +313,13 @@ body.editing .cropstrip{order:3;margin:8px 0 0;height:24%}
   text-transform:uppercase;color:var(--mut);background:rgba(255,255,255,.9);padding:0 4px}
 .cropstrip a{position:absolute;right:6px;bottom:4px;font-size:10.5px;
   background:rgba(255,255,255,.9);padding:1px 5px;text-decoration:none}
+.cands{padding-top:24px}
+.cands-row{display:flex;gap:8px;height:100%;overflow-x:auto;align-items:stretch;max-width:100%}
+.cand{flex:0 0 auto;height:100%;border:1px solid var(--rule);background:#fff;padding:3px;cursor:pointer;display:flex}
+.cand:hover,.cand.on{border-color:var(--rubric)}
+.cand .cropwin{height:100%}
+.bx.cand{border:1.5px dashed rgba(138,42,30,.75);background:transparent;pointer-events:none}
+.bx.cand.hi{border-style:solid;background:rgba(138,42,30,.08)}
 .nocrop{color:var(--mut);font-size:12px;font-style:italic;padding:10px;text-align:center;
   border:1px dashed var(--rule);border-radius:var(--r);margin-top:8px}
 .pagetabs{display:flex;gap:4px;flex-wrap:wrap}
@@ -412,6 +441,14 @@ ol.bib .arm{font-family:var(--arm)}
 @media (max-width:900px){
   header{padding:8px 14px}
   .search{order:5;max-width:none;flex-basis:100%;margin-left:0}
+  .calfa-link{display:none}
+  body[data-view=home] .search{display:none}
+  h1.h1{font-size:22px}
+  #vol-table th:nth-child(3),#vol-table td:nth-child(3){display:none}
+  .brand .title b{font-size:13.5px}
+  .hero{align-items:flex-start}
+  .mark.big{width:34px;height:43px}
+  .bigsearch .btn{display:none}
   #v-browse{overflow:auto}
   #browse{flex-direction:column;flex:none;width:100%}
   .pane{min-width:0}
