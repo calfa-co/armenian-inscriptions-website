@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
 <meta charset="utf-8">
-<title>Corpus Inscriptionum Armenicarum Digitale</title>
+<title>Corpus Inscriptionum Armenicarum Electronicum</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cg fill='none' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 9.5V3h6.5M22.5 3H29v6.5M29 22.5V29h-6.5M9.5 29H3v-6.5' stroke='%238a2a1e' stroke-width='2.4'/%3E%3Cpath d='M11.5 9.5v8.5a4.5 4.5 0 0 0 9 0V9.5M20.5 18v5.5M9.8 9.5h3.4M18.8 9.5h3.4M19 23.5h3.4' stroke='%231a1917' stroke-width='2.2'/%3E%3C/g%3E%3C/svg%3E">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="description" content="Inscription notices from the ten volumes of the Corpus of Armenian Inscriptions (Divan Hay Vimagrutʻyan), machine-read and linked to the printed page.">
@@ -14,7 +14,7 @@
 <header>
   <a class="brand" href="#/" title="Home">
     <svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><path class="m-crop" d="M3 9.5V3h6.5M22.5 3H29v6.5M29 22.5V29h-6.5M9.5 29H3v-6.5"/><path class="m-letter" d="M11.5 9.5v8.5a4.5 4.5 0 0 0 9 0V9.5M20.5 18v5.5M9.8 9.5h3.4M18.8 9.5h3.4M19 23.5h3.4"/></svg>
-    <span class="title"><b>Corpus Inscriptionum Armenicarum Digitale</b><i>Divan Hay Vimagrutʻyan · <span class="arm">Դիվան հայ վիմագրության</span></i></span>
+    <span class="title"><b>Corpus Inscriptionum Armenicarum Electronicum</b><i>Divan Hay Vimagrutʻyan · <span class="arm">Դիվան հայ վիմագրության</span></i></span>
   </a>
   <span id="mode"></span>
   <nav class="top">
@@ -40,7 +40,7 @@
       <div class="hero">
         <svg class="mark big" viewBox="0 0 32 32" aria-hidden="true"><path class="m-crop" d="M3 9.5V3h6.5M22.5 3H29v6.5M29 22.5V29h-6.5M9.5 29H3v-6.5"/><path class="m-letter" d="M11.5 9.5v8.5a4.5 4.5 0 0 0 9 0V9.5M20.5 18v5.5M9.8 9.5h3.4M18.8 9.5h3.4M19 23.5h3.4"/></svg>
         <div>
-          <h1 class="h1">Corpus Inscriptionum Armenicarum Digitale</h1>
+          <h1 class="h1">Corpus Inscriptionum Armenicarum Electronicum</h1>
           <div class="h1-sub">Divan Hay Vimagrutʻyan · <span class="arm">Դիվան հայ վիմագրության</span></div>
         </div>
       </div>
@@ -114,7 +114,6 @@
   <section class="view page" id="v-data" hidden>
     <div class="wrap">
       <h1 class="h1">Data</h1>
-      <p class="lead">Download the corpus as it stands now: the machine extraction with every published correction applied.</p>
 
       <h2 class="h2">Export</h2>
       <div class="exp" id="exp">
@@ -131,7 +130,6 @@
           <label><input type="radio" name="fmt" value="csv" checked> CSV</label>
           <label><input type="radio" name="fmt" value="json"> JSON</label>
           <label><input type="radio" name="fmt" value="jsonl"> JSON Lines</label>
-          <span class="hint">CSV is UTF-8 with a byte-order mark, so spreadsheet software reads the Armenian correctly. JSON carries a provenance header.</span>
         </div>
         <label>Include</label>
         <div class="opts">
@@ -146,13 +144,6 @@
       <h2 class="h2">Sources</h2>
       <div class="srcs" id="srcs"></div>
 
-      <h2 class="h2">How records are built</h2>
-      <div class="prose">
-        <p>Each notice starts as the machine extraction, which is never edited. A published correction
-          replaces individual fields; any field not corrected keeps its machine value. Corrections are read
-          live from the data repository, so an export reflects them within minutes of being accepted.
-          Corrections you have not yet sent are never included.</p>
-      </div>
 
       <h2 class="h2">Fields</h2>
       <table class="tbl" id="fields-dict"></table>
@@ -280,8 +271,6 @@
   <section class="view page" id="v-proofreading" hidden>
     <div class="wrap">
       <h1 class="h1">Proofreading</h1>
-      <p class="lead">Corrections are made by specialists who read Armenian epigraphic script and know the Divan's conventions.
-        Anyone may report a problem from a notice's menu.</p>
 
       <h2 class="h2">How corrections work</h2>
       <ol class="steps">

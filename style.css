@@ -132,11 +132,17 @@ table.tbl{width:100%;border-collapse:collapse;font-size:13.5px}
 .tbl .sub{display:block;font-size:12px;color:var(--mut)}
 .tbl a{text-decoration:none}
 
-footer.site{margin-top:56px;border-top:1px solid var(--rule);padding:22px 0 30px;
-  font-size:12.5px;color:var(--mut)}
-footer.site .wrap{display:flex;gap:16px 28px;flex-wrap:wrap;align-items:center}
-footer.site img{height:22px;opacity:.85}
-footer.site a{color:var(--ink-2)}
+footer.site{margin:64px -24px 0;border-top:1px solid var(--rule);padding:26px 24px 34px;
+  font-size:12.5px;color:var(--mut);background:var(--bg-2)}
+footer.site .wrap{display:flex;flex-direction:column;gap:18px}
+.f-logos{display:flex;gap:28px;align-items:center;flex-wrap:wrap}
+.f-logos img{height:26px;width:auto}
+.f-slot{width:110px;height:34px;border:1px dashed var(--rule)}
+.f-line{display:flex;gap:10px 24px;justify-content:space-between;flex-wrap:wrap;
+  padding-top:14px;border-top:1px solid var(--rule-soft)}
+.f-line nav{display:flex;gap:18px;flex-wrap:wrap}
+footer.site a{color:var(--ink-2);text-decoration:none}
+footer.site a:hover{color:var(--accent);text-decoration:underline}
 
 /* ---------------------------------------------------------------- browse */
 #v-browse{display:flex}
@@ -471,6 +477,7 @@ ol.bib .arm{font-family:var(--arm)}
   .toc{position:static}
   .exp{grid-template-columns:1fr}
   .page{padding:24px 16px 0}
+  footer.site{margin:48px -16px 0;padding:22px 16px 28px}
 }
 
 /* ------------------------------------------------------------- lapis */

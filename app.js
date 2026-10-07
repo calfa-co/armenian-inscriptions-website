@@ -334,10 +334,17 @@ function renderHome() {
 }
 
 function renderFooters() {
-  const html = `<img src="assets/calfa-logo.png" alt="Calfa">
-    <span>Data: <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener">CC BY-SA 4.0</a></span>
-    ${CFG.propose ? `<a href="https://github.com/${CFG.propose}" target="_blank" rel="noopener">Data repository</a>` : ''}
-    <a href="#/data">Download</a><a href="#/about/cite">How to cite</a>`;
+  const html = `
+    <div class="f-logos">
+      <img src="assets/calfa-logo.png" alt="Calfa">
+      <span class="f-slot"></span><span class="f-slot"></span><span class="f-slot"></span>
+    </div>
+    <div class="f-line">
+      <span><i>Corpus Inscriptionum Armenicarum Electronicum</i> · data under
+        <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener">CC BY-SA 4.0</a></span>
+      <nav>${CFG.propose ? `<a href="https://github.com/${CFG.propose}" target="_blank" rel="noopener">Data repository</a>` : ''}
+        <a href="#/data">Download</a><a href="#/about/cite">How to cite</a><a href="#/about">About</a></nav>
+    </div>`;
   document.querySelectorAll('footer.site .wrap').forEach(f => f.innerHTML = html);
 }
 
@@ -589,7 +596,7 @@ function citation(n) {
   const ed = vt ? ` (${surname(v)} ${vt[2]})` : '';
   const today = new Date().toISOString().slice(0, 10);
   return `Divan hay vimagrutʻyan ${roman(v)}${ed}, p. ${pub(n, 'page')}, no. ${pub(n, 'numero')}. `
-    + `Corpus Inscriptionum Armenicarum Digitale, Calfa, record ${n.id}, ${permalink(n)} `
+    + `Corpus Inscriptionum Armenicarum Electronicum, Calfa, record ${n.id}, ${permalink(n)} `
     + `(${STATUS(n)[2]}; accessed ${today}). CC BY-SA 4.0.`;
 }
 
@@ -1594,7 +1601,7 @@ async function provenance() {
 function exportMeta(rows, vals, scopeLabel = '') {
   const p = PROV || {};
   return {
-    title: 'Corpus Inscriptionum Armenicarum Digitale (Divan Hay Vimagrutʻyan, vols I–X, machine-read)',
+    title: 'Corpus Inscriptionum Armenicarum Electronicum (Divan Hay Vimagrutʻyan, vols I–X, machine-read)',
     publisher: 'Calfa', site: SITE, licence: 'CC BY-SA 4.0',
     licence_url: 'https://creativecommons.org/licenses/by-sa/4.0/',
     generated_at: new Date().toISOString(),
@@ -1718,7 +1725,7 @@ function renderAbout(sec) {
         <span class="arm">${esc(t)}</span> [Corpus of Armenian Inscriptions ${roman(v)}: ${esc(en)}]. Yerevan, ${y}.</li>`;
     }).join('');
     $('#cite-example').textContent = 'Divan hay vimagrutʻyan V (Barkhudaryan 1982), p. 20, no. 27. '
-      + `Corpus Inscriptionum Armenicarum Digitale, Calfa, record v5-n27, ${SITE}#/notice/v5-n27 `
+      + `Corpus Inscriptionum Armenicarum Electronicum, Calfa, record v5-n27, ${SITE}#/notice/v5-n27 `
       + '(machine-read, not yet checked; accessed 2026-10-07). CC BY-SA 4.0.';
   }
   if (LOADED) $('#artsakh-count').textContent = `· ${fmtN(NOTICES.filter(n => n.volume === '5').length)} notices`;
