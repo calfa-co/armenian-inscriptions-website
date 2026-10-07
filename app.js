@@ -470,7 +470,24 @@ function apply(sync = true) {
   if (sync) syncHash();
 }
 
+// ---------------------------------------------------------------- lapis
+// Type its name anywhere, or search for it.
+function showLapis() {
+  const l = $('#lapis'), img = l.querySelector('img');
+  if (!img.src) img.src = 'assets/lapis-calfa.png';
+  l.hidden = false;
+}
+$('#lapis').onclick = () => { $('#lapis').hidden = true; };
+let lapisKeys = '';
+addEventListener('keydown', e => {
+  if (e.key === 'Escape') $('#lapis').hidden = true;
+  if (typing() || e.key.length !== 1) return;
+  lapisKeys = (lapisKeys + e.key.toLowerCase()).slice(-5);
+  if (lapisKeys === 'calfa') showLapis();
+});
+
 function setFilter(change) {
+  if (change.q && change.q.toLowerCase() === 'calfa') showLapis();
   Object.assign(F, change);
   page = 0;
   endEdit(false);
