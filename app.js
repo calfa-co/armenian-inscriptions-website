@@ -1245,11 +1245,12 @@ function reconcilePending() {
 }
 function stage(id, payload) {
   const p = PENDING[id] || (PENDING[id] = { id, fields: {} });
-  // Correcting a notice IS reviewing it - you cannot fix a transcription without
-  // having read it against the page. So the first substantive edit marks it
-  // reviewed. Only as a default: an explicit choice wins, and it never
-  // overrides a state already recorded in the published data.
-  const substantive = Object.keys(payload.fields || {}).length || 'crop' in payload;
+  // Correcting the text IS reviewing it - you cannot fix a transcription without
+  // having read it against the page. So the first field edit marks it reviewed.
+  // Moving a facsimile box does not: it says nothing about the text, and has
+  // its own crop_status. Only as a default: an explicit choice wins, and it
+  // never overrides a state already recorded in the published data.
+  const substantive = Object.keys(payload.fields || {}).length;
   if (substantive && !payload.review_status && !p.review_status
       && !(CORR[id] || {}).review_status) {
     p.review_status = 'reviewed';
