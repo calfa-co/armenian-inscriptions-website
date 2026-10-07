@@ -52,13 +52,11 @@ header{display:flex;gap:10px 22px;align-items:center;flex-wrap:wrap;padding:10px
 a.brand{display:flex;gap:12px;align-items:center;text-decoration:none;color:var(--ink)}
 .calfa{height:22px;width:auto;display:block;opacity:.9}
 .calfa-link{display:block}
-.mark{width:22px;height:28px;flex:none;color:var(--ink)}
-.mark path,.mark circle{fill:none;stroke-linecap:round;stroke-linejoin:round}
-.mark .m-stone,.mark .m-base{stroke:currentColor;stroke-width:1.8}
-.mark .m-cross{stroke:var(--rubric);stroke-width:2.4}
-.mark .m-dot{fill:var(--rubric);stroke:none}
-.mark .m-line{stroke:currentColor;stroke-width:1.4;opacity:.75}
-.mark.big{width:46px;height:58px}
+.mark{width:28px;height:28px;flex:none;color:var(--ink)}
+.mark path{fill:none;stroke-linecap:round;stroke-linejoin:round}
+.mark .m-crop{stroke:var(--rubric);stroke-width:2.2}
+.mark .m-letter{stroke:currentColor;stroke-width:2.1}
+.mark.big{width:54px;height:54px}
 .brand .title{display:flex;flex-direction:column;line-height:1.25}
 .brand .title b{font:600 15px var(--ui);letter-spacing:-.005em}
 .brand .title i{font:400 12px var(--ui);font-style:normal;color:var(--mut)}
@@ -432,6 +430,14 @@ body.editing .preview .n-ext{background:#efebf7}
 .logo-slot{height:72px;border:1px dashed var(--rule);display:grid;place-items:center;
   font-size:11.5px;color:var(--mut);background:var(--bg-2)}
 .logo-slot img{max-height:46px;max-width:80%}
+.people{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:22px 18px;margin-top:6px}
+.person{display:flex;flex-direction:column;align-items:center;text-align:center;font-size:13px;color:var(--mut)}
+.person b{color:var(--ink);font-weight:600;font-size:13.5px;margin-top:8px}
+.person .team{font-size:12px}
+.avatar{width:84px;height:84px;border-radius:50%;background:var(--bg-2);border:1px solid var(--rule);
+  overflow:hidden;display:grid;place-items:end center}
+.avatar img{width:100%;height:100%;object-fit:cover}
+.avatar svg{width:64px;height:64px;fill:none;stroke:#c9c4ba;stroke-width:1.6}
 ol.bib{padding-left:0;list-style:none;font-size:13.5px;color:var(--ink-2)}
 ol.bib li{padding-left:2em;text-indent:-2em;margin-bottom:8px}
 ol.bib .arm{font-family:var(--arm)}
@@ -447,7 +453,7 @@ ol.bib .arm{font-family:var(--arm)}
   #vol-table th:nth-child(3),#vol-table td:nth-child(3){display:none}
   .brand .title b{font-size:13.5px}
   .hero{align-items:flex-start}
-  .mark.big{width:34px;height:43px}
+  .mark.big{width:40px;height:40px}
   .bigsearch .btn{display:none}
   #v-browse{overflow:auto}
   #browse{flex-direction:column;flex:none;width:100%}

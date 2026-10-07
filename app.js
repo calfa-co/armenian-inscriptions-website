@@ -627,6 +627,7 @@ function select(id, { keepEdit = true } = {}) {
           <span class="small pos">${idx >= 0 ? `${fmtN(idx + 1)} of ${fmtN(VIEW.length)}` : ''}</span>
           <button class="btn sm" id="st-next" title="Next result (→)" ${idx >= 0 && idx < VIEW.length - 1 ? '' : 'disabled'}>&rsaquo;</button>
         </div>
+        ${!EDITING && canValidate(n) ? '<button class="btn" id="validate-go" title="I have read this notice against the printed page and it is correct">Validate</button>' : ''}
         ${EDITING ? '<button class="btn primary" id="edit-done">Done</button>'
                   : '<button class="btn" id="edit-go" title="Correct this notice (specialists)">Edit</button>'}
         <div class="menu"><button class="btn" id="cite-btn">Cite</button>
@@ -692,6 +693,8 @@ function wireTop(n, idx) {
   if (eg) eg.onclick = () => { EDITING = true; select(n.id); render(); };
   const ed = $('#edit-done');
   if (ed) ed.onclick = () => endEdit(true);
+  const vg = $('#validate-go');
+  if (vg) vg.onclick = () => validate(n.id);
   const pop = (btn, el) => {
     $(btn).onclick = e => {
       e.stopPropagation();
@@ -763,8 +766,8 @@ function renderReadText(n, mine) {
 
   $('#pane-text').innerHTML = `
     ${mine ? `<div class="unsent-note">${mine.proposed_at
-      ? 'Your correction to this notice was submitted as a GitHub issue. It appears here once it has been validated and published, usually within minutes.'
-      : 'You corrected this notice, but the correction is saved in this browser only. Open it and press Send to GitHub to submit it.'}
+      ? 'Your submission for this notice was sent as a GitHub issue. It appears here once it has been checked and published, usually within minutes.'
+      : 'You have changes to this notice saved in this browser only. Open it and press Send to GitHub to submit them.'}
       <button class="link" id="un-edit">Edit</button>${mine.proposed_at ? '' : ' · <button class="link" id="un-discard">Discard</button>'}</div>` : ''}
     <dl class="rec">
       <dt>Location and description ${mk('monument') || mk('description')}</dt>
@@ -1344,17 +1347,52 @@ function describe(n, p) {
   if (p.crop_status) rows.push(`<div class="cf-row"><b>Facsimile box marked</b>
     <div class="cf-now">${esc(p.crop_status)}</div></div>`);
   if (p.review_status) rows.push(`<div class="cf-row"><b>Notice marked</b>
-    <div class="cf-now">${esc(p.review_status.replace('_', ' '))}</div></div>`);
+    <div class="cf-now">${esc({ reviewed: 'checked against the printed page', needs_attention: 'flagged for review',
+      unreviewed: 'not checked' }[p.review_status] || p.review_status)}</div></div>`);
   return rows.join('') || '<div class="cf-row"><i>nothing to send</i></div>';
 }
 
-function propose(id) {
+function propose(id, { title = 'Review correction', onCancel = null } = {}) {
   const n = BYID.get(id), p = PENDING[id];
   if (!n || !p) return;
+  $('#cf-title').textContent = title;
   $('#cf-what').innerHTML = describe(n, p);
   $('#confirm').hidden = false;
   $('#cf-go').onclick = () => { $('#confirm').hidden = true; sendToGitHub(id); };
-  $('#cf-cancel').onclick = () => { $('#confirm').hidden = true; };
+  CF_CANCEL = () => { $('#confirm').hidden = true; if (onCancel) onCancel(); };
+  $('#cf-cancel').onclick = CF_CANCEL;
+}
+let CF_CANCEL = null;
+
+// Reading a notice against the page and finding nothing wrong is work too, and
+// it deserves a record. Validate states exactly that, without opening the
+// editor: it goes through the same GitHub issue as any correction. Unsent
+// edits to the notice, if any, travel with it.
+const canValidate = n => (CFG.propose || CFG.api) && reviewOf(n) !== 'reviewed'
+  && !(PENDING[n.id] && PENDING[n.id].review_status === 'reviewed');
+
+async function validate(id) {
+  if (CFG.api) {
+    const was = EDITING;
+    EDITING = true;
+    await save(id, { review_status: 'reviewed' });
+    EDITING = was;
+    return select(id);
+  }
+  const before = PENDING[id] ? JSON.parse(JSON.stringify(PENDING[id])) : null;
+  const p = PENDING[id] || (PENDING[id] = { id, fields: {} });
+  p.review_status = 'reviewed';
+  delete p.proposed_at;
+  savePending();
+  propose(id, {
+    title: 'Validate this notice',
+    // Cancelling must leave nothing behind, or a reader who changed their mind
+    // would find a "not submitted" validation waiting for them.
+    onCancel: () => {
+      if (before) PENDING[id] = before; else delete PENDING[id];
+      savePending(); select(id); render(); renderBanner();
+    },
+  });
 }
 
 async function sendToGitHub(id) {
@@ -1426,7 +1464,7 @@ const typing = () => {
 };
 addEventListener('keydown', e => {
   if (e.key === 'Escape') {
-    if (!$('#confirm').hidden) { $('#confirm').hidden = true; return; }
+    if (!$('#confirm').hidden) { if (CF_CANCEL) CF_CANCEL(); else $('#confirm').hidden = true; return; }
     document.querySelectorAll('.menu .pop').forEach(p => p.hidden = true);
     return;
   }
@@ -1660,7 +1698,7 @@ function renderAbout(sec) {
     $('#bib-divan').innerHTML = Object.keys(VOLUMES).map(v => {
       const [t, , y] = VOLUMES[v], [en, ed] = VOL_EN[v];
       return `<li>${esc(ed)}. <span class="arm">Դիվան հայ վիմագրության</span>, ${roman(v)}:
-        <span class="arm">${esc(t)}</span> [Divan of Armenian Inscriptions ${roman(v)}: ${esc(en)}]. Yerevan, ${y}.</li>`;
+        <span class="arm">${esc(t)}</span> [Corpus of Armenian Inscriptions ${roman(v)}: ${esc(en)}]. Yerevan, ${y}.</li>`;
     }).join('');
     $('#cite-example').textContent = 'Divan hay vimagrutʻyan V (Barkhudaryan 1982), p. 20, no. 27. '
       + `Corpus Inscriptionum Armenicarum Digitale, Calfa, record v5-n27, ${SITE}#/notice/v5-n27 `
