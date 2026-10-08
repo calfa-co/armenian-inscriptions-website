@@ -51,7 +51,8 @@ header{display:flex;gap:10px 22px;align-items:center;flex-wrap:wrap;padding:10px
   background:#fff;border-bottom:1px solid var(--rule);position:relative;z-index:10}
 a.brand{display:flex;gap:12px;align-items:center;text-decoration:none;color:var(--ink)}
 .calfa{height:22px;width:auto;display:block;opacity:.9}
-.calfa-link{display:block}
+.calfa-link{display:flex;gap:7px;align-items:center;text-decoration:none;color:var(--mut);font-size:11.5px;white-space:nowrap}
+.calfa-link:hover{color:var(--ink-2)}
 .mark{width:28px;height:28px;flex:none;color:var(--ink)}
 .mark path{fill:none;stroke-linecap:round;stroke-linejoin:round}
 .mark .m-crop{stroke:var(--rubric);stroke-width:2.2}
@@ -136,8 +137,17 @@ footer.site{margin:64px -24px 0;border-top:1px solid var(--rule);padding:26px 24
   font-size:12.5px;color:var(--mut);background:var(--bg-2)}
 footer.site .wrap{display:flex;flex-direction:column;gap:18px}
 .f-logos{display:flex;gap:28px;align-items:center;flex-wrap:wrap}
-.f-logos img{height:26px;width:auto}
-.f-slot{width:110px;height:34px;border:1px dashed var(--rule)}
+.f-logos{gap:34px}
+.f-logos img{display:block;width:auto}
+/* Optical sizing: each mark has different proportions, so equal heights would not look equal. */
+.lg-calfa{height:28px}
+.lg-dalih{height:34px}
+.lg-distam{height:52px}
+.lg-anr{height:26px}
+.plogos .lg-calfa{height:32px}
+.plogos .lg-dalih{height:40px}
+.plogos .lg-distam{height:62px}
+.plogos .lg-anr{height:30px}
 .f-line{display:flex;gap:10px 24px;justify-content:space-between;flex-wrap:wrap;
   padding-top:14px;border-top:1px solid var(--rule-soft)}
 .f-line nav{display:flex;gap:18px;flex-wrap:wrap}
@@ -430,12 +440,37 @@ body.editing .preview .n-ext{background:#efebf7}
 .toc a{display:block;padding:4px 0 4px 10px;color:var(--ink-2);text-decoration:none;border-left:2px solid var(--rule-soft)}
 .toc a:hover,.toc a.on{color:var(--accent);border-left-color:var(--accent)}
 .about section{scroll-margin-top:20px}
-#s-project h2.h2{margin-top:0}
+.toc-h{display:block;font:600 10.5px var(--ui);letter-spacing:.07em;text-transform:uppercase;color:var(--rubric);
+  margin:18px 0 4px}
+.toc-h:first-child{margin-top:0}
+.part + .part{margin-top:64px;padding-top:28px;border-top:2px solid var(--ink)}
+.part-h{margin-bottom:8px}
+#s-project .sec-h{margin-top:28px}
+.kicker{display:block;font:600 11px var(--ui);letter-spacing:.08em;text-transform:uppercase;color:var(--rubric)}
+.part-title{font:600 24px/1.25 var(--ui);letter-spacing:-.012em;margin:4px 0 6px}
+.part-lead{font-size:14.5px;color:var(--ink-2);margin:6px 0 0}
+.powered{display:flex;gap:9px;align-items:center;font-size:12.5px;color:var(--mut)}
+.powered img{height:24px;display:block}
+.sec-h{font:600 13px var(--ui);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2);
+  margin:36px 0 12px;padding-bottom:6px;border-bottom:1px solid var(--rule)}
+h4.h4{font:600 14px var(--ui);margin:20px 0 6px}
+.proj{border:1px solid var(--rule);padding:18px 22px 16px;margin-top:20px}
+.proj-h{display:flex;gap:12px;align-items:baseline;justify-content:space-between;flex-wrap:wrap;margin-bottom:6px}
+.proj-title{font:600 18px var(--ui);margin:0}
+.proj-meta{display:grid;grid-template-columns:120px 1fr;gap:10px 16px;margin:14px 0 10px;align-items:center}
+.proj-meta dt{font:600 11px var(--ui);letter-spacing:.05em;text-transform:uppercase;color:var(--mut)}
+.proj-meta dd{margin:0}
+.plogos{display:flex;gap:28px;align-items:center;flex-wrap:wrap}
+.plogos img{display:block;width:auto}
+.proj-links{margin:6px 0 0;font-size:13px}
+.pubfilter{display:flex;gap:4px;flex-wrap:wrap;margin:10px 0 4px}
+.pubfilter a{font-size:12.5px;padding:3px 10px;border:1px solid var(--rule);border-radius:var(--r);
+  color:var(--ink-2);text-decoration:none}
+.pubfilter a:hover{border-color:var(--accent);color:var(--accent)}
+.pubfilter a.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.ptag{display:inline-block;font:500 10.5px var(--ui);color:var(--mut);border:1px solid var(--rule);
+  border-radius:var(--r);padding:0 5px;margin-left:4px;text-indent:0;white-space:nowrap}
 .about section + section{margin-top:8px}
-.logos{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px;margin:16px 0 4px}
-.logo-slot{height:72px;border:1px dashed var(--rule);display:grid;place-items:center;
-  font-size:11.5px;color:var(--mut);background:var(--bg-2)}
-.logo-slot img{max-height:46px;max-width:80%}
 .people{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:22px 18px;margin-top:6px}
 .person{display:flex;flex-direction:column;align-items:center;text-align:center;font-size:13px;color:var(--mut)}
 .person b{color:var(--ink);font-weight:600;font-size:13.5px;margin-top:8px}
@@ -474,6 +509,9 @@ ol.bib .arm{font-family:var(--arm)}
   #pane-text{width:auto !important;overflow:visible}
   #pane-page{min-height:70vh}
   .about{grid-template-columns:1fr}
+  .proj{padding:14px 14px 12px}
+  .proj-meta{grid-template-columns:1fr}
+  .calfa-link span{display:none}
   .toc{position:static}
   .exp{grid-template-columns:1fr}
   .page{padding:24px 16px 0}

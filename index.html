@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;600&family=Noto+Sans:wght@400;500;600&family=Noto+Serif+Armenian:wght@400;600&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Math&text=%E2%8E%A1%E2%8E%A4%E2%8E%A3%E2%8E%A6&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=57151b2d0d">
+<link rel="stylesheet" href="style.css?v=308b33ff8f">
 
 <header>
   <a class="brand" href="#/" title="Home">
@@ -28,7 +28,7 @@
     <input id="q" type="search" placeholder="Search the inscriptions" aria-label="Search the inscriptions" autocomplete="off">
   </div>
   <button id="unsent" hidden></button>
-  <a class="calfa-link" href="https://calfa.fr" target="_blank" rel="noopener" title="Calfa"><img class="calfa" src="assets/calfa-logo.png" alt="Calfa" width="115" height="48"></a>
+  <a class="calfa-link" href="https://calfa.fr" target="_blank" rel="noopener"><span>powered by</span><img class="calfa" src="assets/calfa-logo.png" alt="Calfa" width="115" height="48"></a>
 </header>
 
 <div id="propose-bar" hidden></div>
@@ -162,106 +162,143 @@
   <section class="view page" id="v-about" hidden>
     <div class="wrap about">
       <nav class="toc" id="toc">
+        <span class="toc-h">The corpus</span>
         <a href="#/about/project" data-sec="project">Project</a>
         <a href="#/about/team" data-sec="team">Team</a>
-        <a href="#/about/artsakh" data-sec="artsakh">The Artsakh corpus</a>
         <a href="#/about/method" data-sec="method">Method and data quality</a>
         <a href="#/about/conventions" data-sec="conventions">Editorial signs</a>
         <a href="#/about/bibliography" data-sec="bibliography">Bibliography</a>
         <a href="#/about/cite" data-sec="cite">How to cite</a>
+        <span class="toc-h">Associated projects</span>
+        <a href="#/about/artsakh" data-sec="artsakh">The Artsakh corpus</a>
+        <a href="#/about/mesrop" data-sec="mesrop">MESROP</a>
+        <span class="toc-h">Output</span>
+        <a href="#/about/publications" data-sec="publications">Publications</a>
       </nav>
       <div>
-        <section id="s-project">
-          <h2 class="h2">Project</h2>
-          <div class="prose">
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante venenatis
-              dapibus posuere velit aliquet. Cras mattis consectetur purus sit amet fermentum. Donec ullamcorper
-              nulla non metus auctor fringilla. Maecenas faucibus mollis interdum.</p>
-            <p>Nullam quis risus eget urna mollis ornare vel eu leo. Vestibulum id ligula porta felis euismod
-              semper. Aenean lacinia bibendum nulla sed consectetur. Curabitur blandit tempus porttitor.</p>
+        <!-- ===================== the corpus -->
+        <div class="part" id="part-corpus">
+          <div class="part-h">
+            <span class="kicker">The corpus</span>
+            <h2 class="part-title">Corpus Inscriptionum Armenicarum Electronicum</h2>
+            <div class="powered">Powered by <a href="https://calfa.fr" target="_blank" rel="noopener"><img src="assets/calfa-logo.png" alt="Calfa"></a></div>
           </div>
-          <div class="logos">
-            <div class="logo-slot"><img src="assets/calfa-logo.png" alt="Calfa"></div>
-            <div class="logo-slot">Partner logo</div>
-            <div class="logo-slot">Partner logo</div>
-          </div>
-        </section>
 
-        <section id="s-team">
-          <h2 class="h2">Team</h2>
-          <div class="people">
-            <div class="person"><div class="avatar"><svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="15" r="7"/><path d="M6 37c1.5-8 7-12 14-12s12.5 4 14 12"/></svg></div>
-              <b>Name Surname</b><span>Role</span><span class="team">Team / Institution</span></div>
-            <div class="person"><div class="avatar"><svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="15" r="7"/><path d="M6 37c1.5-8 7-12 14-12s12.5 4 14 12"/></svg></div>
-              <b>Name Surname</b><span>Role</span><span class="team">Team / Institution</span></div>
-            <div class="person"><div class="avatar"><svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="15" r="7"/><path d="M6 37c1.5-8 7-12 14-12s12.5 4 14 12"/></svg></div>
-              <b>Name Surname</b><span>Role</span><span class="team">Team / Institution</span></div>
-            <div class="person"><div class="avatar"><svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="15" r="7"/><path d="M6 37c1.5-8 7-12 14-12s12.5 4 14 12"/></svg></div>
-              <b>Name Surname</b><span>Role</span><span class="team">Team / Institution</span></div>
-            <div class="person"><div class="avatar"><svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="15" r="7"/><path d="M6 37c1.5-8 7-12 14-12s12.5 4 14 12"/></svg></div>
-              <b>Name Surname</b><span>Role</span><span class="team">Team / Institution</span></div>
-            <div class="person"><div class="avatar"><svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="15" r="7"/><path d="M6 37c1.5-8 7-12 14-12s12.5 4 14 12"/></svg></div>
-              <b>Name Surname</b><span>Role</span><span class="team">Team / Institution</span></div>
-          </div>
-        </section>
+          <section id="s-project">
+            <h3 class="sec-h">Project</h3>
+            <div class="prose">
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante venenatis
+                dapibus posuere velit aliquet. Cras mattis consectetur purus sit amet fermentum. Donec ullamcorper
+                nulla non metus auctor fringilla. Maecenas faucibus mollis interdum.</p>
+              <p>Nullam quis risus eget urna mollis ornare vel eu leo. Vestibulum id ligula porta felis euismod
+                semper. Aenean lacinia bibendum nulla sed consectetur. Curabitur blandit tempus porttitor.</p>
+            </div>
+          </section>
 
-        <section id="s-artsakh">
-          <h2 class="h2">The Artsakh corpus</h2>
-          <div class="prose">
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus sagittis lacus vel augue laoreet
-              rutrum faucibus dolor auctor. Duis mollis, est non commodo luctus, nisi erat porttitor ligula,
-              eget lacinia odio sem nec elit.</p>
-            <p>Maecenas sed diam eget risus varius blandit sit amet non magna. Etiam porta sem malesuada magna
-              mollis euismod. Donec sed odio dui.</p>
-            <p><a href="#/browse?vol=5">Browse vol. V, Արցախ</a> <span class="small" id="artsakh-count"></span></p>
-          </div>
-          <h3 class="h3">Partners and funding</h3>
-          <div class="logos">
-            <div class="logo-slot">Logo</div>
-            <div class="logo-slot">Logo</div>
-            <div class="logo-slot">Logo</div>
-            <div class="logo-slot">Logo</div>
-          </div>
-        </section>
+          <section id="s-team">
+            <h3 class="sec-h">Team</h3>
+            <div class="people" id="team-corpus"></div>
+          </section>
 
-        <section id="s-method">
-          <h2 class="h2">Method and data quality</h2>
-          <div class="prose">
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Records were extracted automatically by a
-              vision-language model from scans of the printed volumes; facsimile drawings were located by an object
-              detector. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum.</p>
-            <p>Machine values are preserved. Corrections made by specialists are stored alongside them, with
-              contributor and date. Records not yet checked may contain errors; the printed page is authoritative.</p>
+          <section id="s-method">
+            <h3 class="sec-h">Method and data quality</h3>
+            <div class="prose">
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Records were extracted automatically by a
+                vision-language model from scans of the printed volumes; facsimile drawings were located by an object
+                detector. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum.</p>
+              <p>Machine values are preserved. Corrections made by specialists are stored alongside them, with
+                contributor and date. Records not yet checked may contain errors; the printed page is authoritative.</p>
+            </div>
+          </section>
+
+          <section id="s-conventions">
+            <h3 class="sec-h">Editorial signs</h3>
+            <div class="prose"><p>Transcriptions are diplomatic and reproduce the signs of the printed edition.
+              Their exact use varies between volumes; each volume's table of conventional signs is authoritative.</p></div>
+            <table class="tbl notation" id="notation"></table>
+          </section>
+
+          <section id="s-bibliography">
+            <h3 class="sec-h">Bibliography</h3>
+            <h4 class="h4">The Corpus of Armenian Inscriptions</h4>
+            <ol class="bib" id="bib-divan"></ol>
+            <h4 class="h4">Further reading</h4>
+            <ol class="bib">
+              <li>Barkhudarian, Makar. <i>Artsʻakh</i>. Baku, 1895.</li>
+              <li>Greenwood, Tim. “A Corpus of Early Medieval Armenian Inscriptions.” <i>Dumbarton Oaks Papers</i> 58 (2004): 27–91.</li>
+              <li>Elliott, Tom, et al. <i>EpiDoc Guidelines</i>. <a href="https://epidoc.stoa.org/gl/latest/" target="_blank" rel="noopener">epidoc.stoa.org</a></li>
+            </ol>
+          </section>
+
+          <section id="s-cite">
+            <h3 class="sec-h">How to cite</h3>
+            <div class="prose">
+              <p>Cite the printed edition first, then the digital record with its address and the date you consulted it:</p>
+              <p class="small" id="cite-example"></p>
+              <p>The data are released under <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener">CC BY-SA 4.0</a>.</p>
+            </div>
+          </section>
+        </div>
+
+        <!-- ===================== associated projects -->
+        <div class="part" id="part-projects">
+          <div class="part-h">
+            <span class="kicker">Associated projects</span>
+            <p class="part-lead">Research projects that build on the corpus, each with its own team and funding.</p>
           </div>
-        </section>
 
-        <section id="s-conventions">
-          <h2 class="h2">Editorial signs</h2>
-          <div class="prose"><p>Transcriptions are diplomatic and reproduce the signs of the printed edition.
-            Their exact use varies between volumes; each volume's table of conventional signs is authoritative.</p></div>
-          <table class="tbl notation" id="notation"></table>
-        </section>
+          <section id="s-artsakh" class="proj">
+            <div class="proj-h">
+              <h3 class="proj-title">The Artsakh corpus</h3>
+              <span class="small" id="artsakh-count"></span>
+            </div>
+            <div class="prose">
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus sagittis lacus vel augue laoreet
+                rutrum faucibus dolor auctor. Duis mollis, est non commodo luctus, nisi erat porttitor ligula,
+                eget lacinia odio sem nec elit.</p>
+            </div>
+            <dl class="proj-meta">
+              <dt>Project leader</dt><dd id="lead-artsakh"></dd>
+              <dt>Partners</dt><dd><div class="plogos">
+                <img src="assets/dalih-logo.png" alt="DALiH: Digitizing Armenian Linguistic Heritage" class="lg-dalih">
+                <img src="assets/ANR-logo.jpg" alt="ANR: Agence nationale de la recherche" class="lg-anr">
+                <img src="assets/calfa-logo.png" alt="Calfa" class="lg-calfa">
+              </div></dd>
+            </dl>
+            <p class="proj-links"><a href="#/browse?vol=5">Browse vol. V, <span class="arm">Արցախ</span></a>
+              · <a href="#/about/publications?project=artsakh">Publications</a></p>
+          </section>
 
-        <section id="s-bibliography">
-          <h2 class="h2">Bibliography</h2>
-          <h3 class="h3">The Corpus of Armenian Inscriptions</h3>
-          <ol class="bib" id="bib-divan"></ol>
-          <h3 class="h3">Further reading</h3>
-          <ol class="bib">
-            <li>Barkhudarian, Makar. <i>Artsʻakh</i>. Baku, 1895.</li>
-            <li>Greenwood, Tim. “A Corpus of Early Medieval Armenian Inscriptions.” <i>Dumbarton Oaks Papers</i> 58 (2004): 27–91.</li>
-            <li>Elliott, Tom, et al. <i>EpiDoc Guidelines</i>. <a href="https://epidoc.stoa.org/gl/latest/" target="_blank" rel="noopener">epidoc.stoa.org</a></li>
-          </ol>
-        </section>
+          <section id="s-mesrop" class="proj">
+            <div class="proj-h">
+              <h3 class="proj-title">MESROP</h3>
+            </div>
+            <div class="prose">
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas sed diam eget risus varius blandit
+                sit amet non magna. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.</p>
+            </div>
+            <dl class="proj-meta">
+              <dt>Project leader</dt><dd id="lead-mesrop"></dd>
+              <dt>Partners</dt><dd><div class="plogos">
+                <img src="assets/calfa-logo.png" alt="Calfa" class="lg-calfa">
+                <img src="assets/distam-logo.png" alt="DISTAM+" class="lg-distam">
+              </div></dd>
+            </dl>
+            <p class="proj-links"><a href="#/about/publications?project=mesrop">Publications</a></p>
+          </section>
+        </div>
 
-        <section id="s-cite">
-          <h2 class="h2">How to cite</h2>
-          <div class="prose">
-            <p>Cite the printed edition first, then the digital record with its address and the date you consulted it:</p>
-            <p class="small" id="cite-example"></p>
-            <p>The data are released under <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener">CC BY-SA 4.0</a>.</p>
-          </div>
-        </section>
+        <!-- ===================== publications -->
+        <div class="part" id="part-pubs">
+          <section id="s-publications">
+            <div class="part-h">
+              <span class="kicker">Output</span>
+              <h2 class="part-title">Publications</h2>
+            </div>
+            <div class="pubfilter" id="pubfilter"></div>
+            <div id="pubs"></div>
+          </section>
+        </div>
       </div>
     </div>
     <footer class="site"><div class="wrap" id="foot-about"></div></footer>
@@ -319,4 +356,4 @@
 </div>
 
 <script src="config.js?v=e89174972a"></script>
-<script src="app.js?v=4ba4f9bb4b"></script>
+<script src="app.js?v=2be5d03cc8"></script>

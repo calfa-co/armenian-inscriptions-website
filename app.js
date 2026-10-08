@@ -238,7 +238,7 @@ function route() {
   if (!['home', 'browse', 'data', 'about', 'proofreading'].includes(view)) { go('#/'); return; }
   showView(view);
   renderFooters();
-  if (view === 'about') return renderAbout(r.arg);
+  if (view === 'about') return renderAbout(r.arg, r.params);
   if (!LOADED) return;
   if (view === 'home') return renderHome();
   if (view === 'proofreading') return renderDash();
@@ -336,8 +336,10 @@ function renderHome() {
 function renderFooters() {
   const html = `
     <div class="f-logos">
-      <img src="assets/calfa-logo.png" alt="Calfa">
-      <span class="f-slot"></span><span class="f-slot"></span><span class="f-slot"></span>
+      <a href="https://calfa.fr" target="_blank" rel="noopener"><img src="assets/calfa-logo.png" alt="Calfa" class="lg-calfa"></a>
+      <img src="assets/dalih-logo.png" alt="DALiH: Digitizing Armenian Linguistic Heritage" class="lg-dalih">
+      <img src="assets/distam-logo.png" alt="DISTAM+" class="lg-distam">
+      <img src="assets/ANR-logo.jpg" alt="ANR: Agence nationale de la recherche" class="lg-anr">
     </div>
     <div class="f-line">
       <span><i>Corpus Inscriptionum Armenicarum Electronicum</i> · data under
@@ -1715,7 +1717,49 @@ function renderSources() {
 }
 
 // ---------------------------------------------------------------- about
-function renderAbout(sec) {
+// The corpus and the research projects built on it are credited separately,
+// so a reader never mistakes a project's team or funders for the corpus's own.
+const PEOPLE = {
+  cvg: ['Chahan Vidal-Gorène', 'Calfa'],
+  vk:  ['Victoria Khurshudyan', 'Inalco'],
+  em:  ['Edita Matevosyan', 'Calfa · UFAR'],
+  sk:  ['Seda Kirakosyan', 'Calfa · UFAR'],
+  aa:  ['Arpine Avetisyan', 'Inalco'],
+  jg:  ['Jost Gippert', 'University of Hamburg'],
+};
+const TEAM = {
+  corpus: [['cvg', 'Project leader'], ['vk', 'Project leader'], ['em', 'IT and ML engineer'],
+           ['sk', 'IT and ML engineer'], ['aa', 'Scientific expert'], ['jg', 'Associated researcher']],
+  artsakh: [['aa', 'Project leader']],
+  mesrop: [['cvg', 'Project leader']],
+};
+const PROJECTS = { corpus: 'Corpus', artsakh: 'The Artsakh corpus', mesrop: 'MESROP' };
+// One entry per publication, tagged with the project it belongs to.
+// Placeholders until the real list is supplied.
+const PUBLICATIONS = [
+  { project: 'corpus',  year: 2026, html: 'Lorem, A., and B. Ipsum. “Dolor sit amet: consectetur adipiscing elit.” <i>Journal of Lorem Studies</i> 12 (2026): 1–20.' },
+  { project: 'corpus',  year: 2025, html: 'Lorem, A. “Sed do eiusmod tempor incididunt.” In <i>Proceedings of the Lorem Workshop</i>, 33–41. 2025.' },
+  { project: 'artsakh', year: 2026, html: 'Ipsum, C. “Ut enim ad minim veniam, quis nostrud exercitation.” <i>Revue de Lorem</i> 4 (2026): 55–78.' },
+  { project: 'artsakh', year: 2025, html: 'Ipsum, C., and D. Dolor. <i>Duis aute irure dolor in reprehenderit</i>. Paris: Lorem, 2025.' },
+  { project: 'mesrop',  year: 2026, html: 'Dolor, E. “Excepteur sint occaecat cupidatat non proident.” In <i>Lorem Ipsum 2026</i>, 101–112. 2026.' },
+];
+const AVATAR = '<svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="15" r="7"/><path d="M6 37c1.5-8 7-12 14-12s12.5 4 14 12"/></svg>';
+const personCard = ([k, role]) => `<div class="person"><div class="avatar">${AVATAR}</div>
+  <b>${esc(PEOPLE[k][0])}</b><span>${esc(role)}</span><span class="team">${esc(PEOPLE[k][1])}</span></div>`;
+const personLine = ([k]) => `<b>${esc(PEOPLE[k][0])}</b> <span class="small">(${esc(PEOPLE[k][1])})</span>`;
+
+function renderPubs(project) {
+  const sel = PROJECTS[project] ? project : '';
+  $('#pubfilter').innerHTML = [['', 'All'], ...Object.entries(PROJECTS)].map(([k, l]) =>
+    `<a href="#/about/publications${k ? '?project=' + k : ''}" class="${k === sel ? 'on' : ''}">${esc(l)}</a>`).join('');
+  const rows = PUBLICATIONS.filter(p => !sel || p.project === sel).sort((a, b) => b.year - a.year);
+  const years = [...new Set(rows.map(p => p.year))];
+  $('#pubs').innerHTML = rows.length ? years.map(y => `<h4 class="h4">${y}</h4><ol class="bib">${
+    rows.filter(p => p.year === y).map(p => `<li>${p.html} <span class="ptag">${esc(PROJECTS[p.project])}</span></li>`).join('')
+  }</ol>`).join('') : '<p class="small">No publications yet.</p>';
+}
+
+function renderAbout(sec, params = new URLSearchParams()) {
   if (!$('#notation').innerHTML) {
     $('#notation').innerHTML = `<tbody>${SIGNS.map(([g, d]) =>
       `<tr><td>${esc(g)}</td><td>${esc(d)}</td></tr>`).join('')}</tbody>`;
@@ -1727,8 +1771,12 @@ function renderAbout(sec) {
     $('#cite-example').textContent = 'Divan hay vimagrutʻyan V (Barkhudaryan 1982), p. 20, no. 27. '
       + `Corpus Inscriptionum Armenicarum Electronicum, Calfa, record v5-n27, ${SITE}#/notice/v5-n27 `
       + '(machine-read, not yet checked; accessed 2026-10-07). CC BY-SA 4.0.';
+    $('#team-corpus').innerHTML = TEAM.corpus.map(personCard).join('');
+    $('#lead-artsakh').innerHTML = TEAM.artsakh.map(personLine).join(', ');
+    $('#lead-mesrop').innerHTML = TEAM.mesrop.map(personLine).join(', ');
   }
-  if (LOADED) $('#artsakh-count').textContent = `· ${fmtN(NOTICES.filter(n => n.volume === '5').length)} notices`;
+  renderPubs(params.get('project'));
+  if (LOADED) $('#artsakh-count').textContent = `Vol. V · ${fmtN(NOTICES.filter(n => n.volume === '5').length)} notices`;
   const id = sec || 'project';
   document.querySelectorAll('#toc a').forEach(a => a.classList.toggle('on', a.dataset.sec === id));
   const el = $('#s-' + id);
