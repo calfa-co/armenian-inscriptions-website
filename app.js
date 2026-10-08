@@ -1729,7 +1729,7 @@ const PEOPLE = {
 };
 const TEAM = {
   corpus: [['cvg', 'Project leader'], ['vk', 'Project leader'], ['em', 'IT and ML engineer'],
-           ['sk', 'IT and ML engineer'], ['aa', 'Scientific expert'], ['jg', 'Associated researcher']],
+           ['sk', 'IT and ML engineer'], ['aa', 'Scientific expert'], ['jg', 'Scientific advisor']],
   artsakh: [['aa', 'Project leader']],
   mesrop: [['cvg', 'Project leader']],
 };
