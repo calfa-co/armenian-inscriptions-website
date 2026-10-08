@@ -340,6 +340,7 @@ function renderFooters() {
       <img src="assets/dalih-logo.png" alt="DALiH: Digitizing Armenian Linguistic Heritage" class="lg-dalih">
       <img src="assets/distam-logo.png" alt="DISTAM+" class="lg-distam">
       <img src="assets/ANR-logo.jpg" alt="ANR: Agence nationale de la recherche" class="lg-anr">
+      <img src="assets/institut-logo.png" alt="Institute of Archaeology and Ethnography, National Academy of Sciences of Armenia" class="lg-inst">
     </div>
     <div class="f-line">
       <span><i>Corpus Inscriptionum Armenicarum Electronicum</i> · data under
