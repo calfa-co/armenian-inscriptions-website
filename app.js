@@ -1736,13 +1736,8 @@ const TEAM = {
 };
 const PROJECTS = { corpus: 'Corpus', artsakh: 'The Artsakh corpus', mesrop: 'MESROP' };
 // One entry per publication, tagged with the project it belongs to.
-// Placeholders until the real list is supplied.
 const PUBLICATIONS = [
-  { project: 'corpus',  year: 2026, html: 'Lorem, A., and B. Ipsum. “Dolor sit amet: consectetur adipiscing elit.” <i>Journal of Lorem Studies</i> 12 (2026): 1–20.' },
-  { project: 'corpus',  year: 2025, html: 'Lorem, A. “Sed do eiusmod tempor incididunt.” In <i>Proceedings of the Lorem Workshop</i>, 33–41. 2025.' },
-  { project: 'artsakh', year: 2026, html: 'Ipsum, C. “Ut enim ad minim veniam, quis nostrud exercitation.” <i>Revue de Lorem</i> 4 (2026): 55–78.' },
-  { project: 'artsakh', year: 2025, html: 'Ipsum, C., and D. Dolor. <i>Duis aute irure dolor in reprehenderit</i>. Paris: Lorem, 2025.' },
-  { project: 'mesrop',  year: 2026, html: 'Dolor, E. “Excepteur sint occaecat cupidatat non proident.” In <i>Lorem Ipsum 2026</i>, 101–112. 2026.' },
+  { project: 'mesrop', year: 2024, html: 'Vidal-Gorène, Chahan, and Aliénor Decours-Perez. “Detecting and Deciphering Damaged Medieval Armenian Inscriptions Using YOLO and Vision Transformers.” In <i>Document Analysis and Recognition – ICDAR 2024 Workshops</i>, edited by H. Mouchère and A. Zhu, 22–36. Lecture Notes in Computer Science 14936. Cham: Springer, 2024. <a href="https://doi.org/10.1007/978-3-031-70642-4_2" target="_blank" rel="noopener">doi:10.1007/978-3-031-70642-4_2</a>' },
 ];
 const AVATAR = '<svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="15" r="7"/><path d="M6 37c1.5-8 7-12 14-12s12.5 4 14 12"/></svg>';
 const personCard = ([k, role]) => `<div class="person"><div class="avatar">${AVATAR}</div>

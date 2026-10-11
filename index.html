@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;600&family=Noto+Sans:wght@400;500;600&family=Noto+Serif+Armenian:wght@400;600&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Math&text=%E2%8E%A1%E2%8E%A4%E2%8E%A3%E2%8E%A6&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=899b95b0ba">
+<link rel="stylesheet" href="style.css?v=e1b72c4ea8">
 
 <header>
   <a class="brand" href="#/" title="Home">
@@ -186,11 +186,25 @@
           <section id="s-project">
             <h3 class="sec-h">Project</h3>
             <div class="prose">
-              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante venenatis
-                dapibus posuere velit aliquet. Cras mattis consectetur purus sit amet fermentum. Donec ullamcorper
-                nulla non metus auctor fringilla. Maecenas faucibus mollis interdum.</p>
-              <p>Nullam quis risus eget urna mollis ornare vel eu leo. Vestibulum id ligula porta felis euismod
-                semper. Aenean lacinia bibendum nulla sed consectetur. Curabitur blandit tempus porttitor.</p>
+              <p>The Corpus Inscriptionum Armenicarum Electronicum (CIAE) is a digital version of the
+                <i>Divan hay vimagrutʻyan</i> (<span class="arm">Դիվան հայ վիմագրության</span>, Corpus of Armenian
+                Inscriptions), the series compiled by the Institute of Archaeology and Ethnography of the National
+                Academy of Sciences of Armenia since 1966 (see <a href="#/about/bibliography">Bibliography</a>).</p>
+              <p>Led by Calfa in collaboration with Inalco (ANR project DALiH), the CIAE has three aims:</p>
+              <ul>
+                <li>to make the information in the printed volumes easy to search and query;</li>
+                <li>to provide a lasting platform for documenting Armenian epigraphic heritage, on which records
+                  can be updated and enriched over time;</li>
+                <li>to provide silver data in Old and Middle Armenian for training language models (for instance,
+                  to decipher damaged inscriptions) and for exploring methods in the digital humanities. This aim
+                  is pursued jointly with the <a href="#/about/mesrop">MESROP</a> project, funded by DISTAM.</li>
+              </ul>
+              <p>The CIAE rests above all on the remarkable work of compilation and description carried out over
+                the decades in the <i>Divan hay vimagrutʻyan</i>. Any use of the digital corpus must cite the
+                original volume as well as the digital version consulted (see the citation on each record, and
+                <a href="#/about/cite">How to cite</a> below). The raw data are available on
+                <a href="https://github.com/calfa-co/armenian-inscriptions-data" target="_blank" rel="noopener">GitHub</a>
+                and through the <a href="#/data">export module</a>.</p>
             </div>
           </section>
 
@@ -202,11 +216,15 @@
           <section id="s-method">
             <h3 class="sec-h">Method and data quality</h3>
             <div class="prose">
-              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Records were extracted automatically by a
-                vision-language model from scans of the printed volumes; facsimile drawings were located by an object
-                detector. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum.</p>
-              <p>Machine values are preserved. Corrections made by specialists are stored alongside them, with
-                contributor and date. Records not yet checked may contain errors; the printed page is authoritative.</p>
+              <p>The corpus was extracted and structured with a pipeline developed by Calfa that combines a
+                vision-language model, for the OCR and semantic parsing of each record, with a YOLO detector that
+                locates the inscription drawings. The pipeline is being documented for publication, and its formal
+                evaluation is under way. A qualitative assessment by our experts has nonetheless judged the output
+                good enough to be searched and used now. Most errors concern editorial signs.</p>
+              <p>The platform is also a proofreading tool. Records can be corrected in several ways, from
+                reassigning drawings to fixing typos, and every proposed correction is checked by our experts
+                (see <a href="#/proofreading">Proofreading</a>).</p>
+              <p class="small">This section will be updated as the evaluation progresses.</p>
             </div>
           </section>
 
@@ -226,6 +244,7 @@
               <li>Barkhudarian, Makar. <i>Artsʻakh</i>. Baku, 1895.</li>
               <li>Greenwood, Tim. “A Corpus of Early Medieval Armenian Inscriptions.” <i>Dumbarton Oaks Papers</i> 58 (2004): 27–91.</li>
               <li>Elliott, Tom, et al. <i>EpiDoc Guidelines</i>. <a href="https://epidoc.stoa.org/gl/latest/" target="_blank" rel="noopener">epidoc.stoa.org</a></li>
+              <li>Vidal-Gorène, Chahan, and Aliénor Decours-Perez. “Detecting and Deciphering Damaged Medieval Armenian Inscriptions Using YOLO and Vision Transformers.” In <i>Document Analysis and Recognition – ICDAR 2024 Workshops</i>, edited by H. Mouchère and A. Zhu, 22–36. Lecture Notes in Computer Science 14936. Cham: Springer, 2024. <a href="https://doi.org/10.1007/978-3-031-70642-4_2" target="_blank" rel="noopener">doi:10.1007/978-3-031-70642-4_2</a></li>
             </ol>
           </section>
 
@@ -252,12 +271,23 @@
               <span class="small" id="artsakh-count"></span>
             </div>
             <div class="prose">
-              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus sagittis lacus vel augue laoreet
-                rutrum faucibus dolor auctor. Duis mollis, est non commodo luctus, nisi erat porttitor ligula,
-                eget lacinia odio sem nec elit.</p>
+              <p>This project is building the first digital corpus of Armenian inscriptions from Artsakh. Some
+                1,071 historical and architectural monuments are recorded in the region, with inscriptions ranging
+                from the early Middle Ages to the 18th century (<i>Divan</i> V, 1982). They have received little
+                scholarly attention, owing to their number, the shortage of specialists and restricted access, while
+                the fragility of the monuments makes their documentation urgent.</p>
+              <p>Its first task is to check, as a priority, the records of volume V in this digital corpus. It then
+                extends them from photographs and drawings, starting with the inscriptions of Martakert. Each
+                inscription receives two aligned layers: a diplomatic transcription that keeps lineation,
+                abbreviations and graphemic detail, and a normalized text that expands abbreviations and regularizes
+                spelling for search and language processing. Metadata follow a schema inspired by EpiDoc (location,
+                monument and material, dating, script, donor or scribe, state of preservation). The project builds on
+                a pilot corpus for the Shirak region (Master's thesis, Inalco, 2022–2023), and its results will be
+                released openly.</p>
             </div>
             <dl class="proj-meta">
               <dt>Project leader</dt><dd id="lead-artsakh"></dd>
+              <dt>Period</dt><dd>2026</dd>
               <dt>Partners</dt><dd><div class="plogos">
                 <img src="assets/dalih-logo.png" alt="DALiH: Digitizing Armenian Linguistic Heritage" class="lg-dalih">
                 <img src="assets/ANR-logo.jpg" alt="ANR: Agence nationale de la recherche" class="lg-anr">
@@ -273,14 +303,26 @@
               <h3 class="proj-title">MESROP</h3>
             </div>
             <div class="prose">
-              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas sed diam eget risus varius blandit
-                sit amet non magna. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.</p>
+              <p><i>Machine learning for Epigraphic Study and Recognition Of the Armenian Patrimony.</i> MESROP is an
+                ongoing project that explores what computer vision and language models can bring to Armenian epigraphy.
+                It takes up the third aim of the CIAE.</p>
+              <p>Much of the Armenian epigraphic heritage is at risk. Inscriptions stand in conflict zones, weathering
+                wears them away, and fewer and fewer readers can make sense of abbreviated, damaged texts in Old
+                Armenian. Many now survive only in photographs, drawings or printed editions.</p>
+              <p>MESROP asks how far machines can support that reading: by locating and transcribing inscriptions on
+                photographs and 3D models, by proposing plausible readings for lost or worn passages, and by tracking
+                the physical degradation of monuments over time. The structured records of the <i>Divan</i> published
+                here serve as training data, and the 3D models produced by TUMO tie each text back to its monument.
+                The project also aims at an open, reproducible approach that can serve other non-Latin scripts; its
+                models and datasets will be released openly.</p>
             </div>
             <dl class="proj-meta">
               <dt>Project leader</dt><dd id="lead-mesrop"></dd>
+              <dt>Status</dt><dd>Ongoing</dd>
               <dt>Partners</dt><dd><div class="plogos">
                 <img src="assets/calfa-logo.png" alt="Calfa" class="lg-calfa">
                 <img src="assets/distam-logo.png" alt="DISTAM+" class="lg-distam">
+                <a href="https://tumo.org/" target="_blank" rel="noopener"><img src="assets/tumo-logo.png" alt="TUMO Center for Creative Technologies" class="lg-tumo"></a>
               </div></dd>
             </dl>
             <p class="proj-links"><a href="#/about/publications?project=mesrop">Publications</a></p>
@@ -355,4 +397,4 @@
 </div>
 
 <script src="config.js?v=e89174972a"></script>
-<script src="app.js?v=04ee212281"></script>
+<script src="app.js?v=b344767631"></script>
