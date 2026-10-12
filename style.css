@@ -152,6 +152,7 @@ footer.site .wrap{display:flex;flex-direction:column;gap:18px}
 .plogos .lg-distam{height:62px}
 .plogos .lg-anr{height:30px}
 .plogos .lg-tumo{height:40px}
+.plogos .lg-agbu{height:40px}
 .f-line{display:flex;gap:10px 24px;justify-content:space-between;flex-wrap:wrap;
   padding-top:14px;border-top:1px solid var(--rule-soft)}
 .f-line nav{display:flex;gap:18px;flex-wrap:wrap}

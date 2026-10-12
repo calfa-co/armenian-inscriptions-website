@@ -1725,7 +1725,7 @@ const PEOPLE = {
   vk:  ['Victoria Khurshudyan', 'Inalco'],
   em:  ['Edita Matevosyan', 'Calfa · UFAR'],
   sk:  ['Seda Kirakosyan', 'Calfa · UFAR'],
-  aa:  ['Arpine Avetisyan', 'Inalco'],
+  aa:  ['Arpine Avetisyan', 'Sorbonne-Nouvelle'],
   jg:  ['Jost Gippert', 'University of Hamburg'],
 };
 const TEAM = {
