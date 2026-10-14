@@ -334,6 +334,21 @@ function renderHome() {
     tr.onclick = () => go(`#/browse?vol=${tr.dataset.vol}`));
 }
 
+// Calfa's other heritage projects, as the manuscript catalogue lists them.
+// `short` is the footer label; the About page gives the full name.
+const OTHER_PROJECTS = [
+  { name: 'Armenian Manuscript Catalogues', short: 'Manuscript catalogues',
+    url: 'https://catalogs.calfa.fr', logo: 'assets/projects/catalogs.svg',
+    description: 'A digital edition of the printed catalogues of the Armenian manuscripts of Jerusalem, Vienna and Venice, machine-read by Calfa. Each record can be compared with the scan of the printed catalogue page.' },
+  { name: 'Index of Digitized Armenian Manuscripts', short: 'Index of digitized manuscripts',
+    url: 'https://www.armenian-manuscripts-index.com', logo: 'assets/projects/iarm.png',
+    description: 'A list of Armenian manuscripts digitized by libraries and collections, with their metadata. IIIF links give direct access to the images, with tools for consultation and annotation.' },
+  { name: 'Enriched Dictionaries of Classical and Modern Armenian', short: 'Armenian dictionaries',
+    url: 'https://dictionary.calfa.fr', logo: 'assets/projects/dictionary.png',
+    description: 'Dictionaries of Classical and Modern Armenian, with French and English, built on major lexicons. Entries give proper nouns, synonyms, etymology and inflection, with examples from 400 sources.' },
+];
+const domainOf = url => url.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '');
+
 function renderFooters() {
   const html = `
     <div class="f-logos">
@@ -343,6 +358,8 @@ function renderFooters() {
       <img src="assets/ANR-logo.jpg" alt="ANR: Agence nationale de la recherche" class="lg-anr">
       <img src="assets/institut-logo.png" alt="Institute of Archaeology and Ethnography, National Academy of Sciences of Armenia" class="lg-inst">
     </div>
+    <div class="f-projects"><span>Other Calfa projects</span>${OTHER_PROJECTS.map(p =>
+      `<a href="${p.url}" target="_blank" rel="noopener" title="${esc(p.name)}"><img src="${p.logo}" alt="">${esc(p.short)}</a>`).join('')}</div>
     <div class="f-line">
       <span><i>Corpus Inscriptionum Armenicarum Electronicum</i> · data under
         <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener">CC BY-SA 4.0</a></span>
@@ -1776,6 +1793,9 @@ function renderAbout(sec, params = new URLSearchParams()) {
     $('#team-corpus').innerHTML = TEAM.corpus.map(personCard).join('');
     $('#lead-artsakh').innerHTML = TEAM.artsakh.map(personLine).join(', ');
     $('#lead-mesrop').innerHTML = TEAM.mesrop.map(personLine).join(', ');
+    $('#others').innerHTML = OTHER_PROJECTS.map(p => `<li><span class="plogo"><img src="${p.logo}" alt=""></span>
+      <div><a href="${p.url}" target="_blank" rel="noopener">${esc(p.name)}</a> <span class="small">${esc(domainOf(p.url))}</span>
+      <p>${esc(p.description)}</p></div></li>`).join('');
   }
   renderPubs(params.get('project'));
   if (LOADED) $('#artsakh-count').textContent = `Vol. V · ${fmtN(NOTICES.filter(n => n.volume === '5').length)} notices`;
