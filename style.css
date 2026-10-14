@@ -153,10 +153,7 @@ footer.site .wrap{display:flex;flex-direction:column;gap:18px}
 .plogos .lg-anr{height:30px}
 .plogos .lg-tumo{height:40px}
 .plogos .lg-agbu{height:40px}
-.f-projects{display:flex;flex-wrap:wrap;align-items:center;gap:8px 22px;font:13px var(--ui)}
-.f-projects>span{font:600 10.5px var(--ui);letter-spacing:.07em;text-transform:uppercase;color:var(--mut)}
-.f-projects a{display:inline-flex;align-items:center;gap:7px}
-.f-projects img{display:block;height:18px;width:auto}
+.f-also{margin-top:-10px;font:12px var(--ui);color:var(--mut)}
 .f-line{display:flex;gap:10px 24px;justify-content:space-between;flex-wrap:wrap;
   padding-top:14px;border-top:1px solid var(--rule-soft)}
 .f-line nav{display:flex;gap:18px;flex-wrap:wrap}

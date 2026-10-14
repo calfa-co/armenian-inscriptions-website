@@ -358,14 +358,14 @@ function renderFooters() {
       <img src="assets/ANR-logo.jpg" alt="ANR: Agence nationale de la recherche" class="lg-anr">
       <img src="assets/institut-logo.png" alt="Institute of Archaeology and Ethnography, National Academy of Sciences of Armenia" class="lg-inst">
     </div>
-    <div class="f-projects"><span>Other Calfa projects</span>${OTHER_PROJECTS.map(p =>
-      `<a href="${p.url}" target="_blank" rel="noopener" title="${esc(p.name)}"><img src="${p.logo}" alt="">${esc(p.short)}</a>`).join('')}</div>
     <div class="f-line">
       <span><i>Corpus Inscriptionum Armenicarum Electronicum</i> · data under
         <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener">CC BY-SA 4.0</a></span>
       <nav>${CFG.propose ? `<a href="https://github.com/${CFG.propose}" target="_blank" rel="noopener">Data repository</a>` : ''}
         <a href="#/data">Download</a><a href="#/about/cite">How to cite</a><a href="#/about">About</a></nav>
-    </div>`;
+    </div>
+    <div class="f-also">Also by Calfa: ${OTHER_PROJECTS.map(p =>
+      `<a href="${p.url}" target="_blank" rel="noopener" title="${esc(p.name)}">${esc(p.short)}</a>`).join(' · ')}</div>`;
   document.querySelectorAll('footer.site .wrap').forEach(f => f.innerHTML = html);
 }
 
