@@ -118,7 +118,8 @@ const byWhom = n => {
   const c = CORR[n.id];
   if (!c || !c.updated_by || c.updated_by === 'local') return '';
   const who = c.updated_by === 'pre-github' ? 'before GitHub' : c.updated_by;
-  return `${who}${c.updated_at ? ', ' + c.updated_at.slice(0, 10) : ''}`;
+  return `${who}${c.updated_at ? ', ' + c.updated_at.slice(0, 10) : ''}`
+    + (c.approved_by ? ` · approved by ${c.approved_by}` : '');
 };
 // Crop-only changes never count as "corrected": the text is what is certified.
 const STATUS = n => {
@@ -363,7 +364,7 @@ const FLAGS = {
   crop_human: ['Facsimile box set by hand', 'adjusted by an editor'],
   edited: ['Corrected', 'at least one field changed by a specialist'],
   pending: ['My corrections, not submitted', 'saved in this browser only: open each and press Send to GitHub'],
-  awaiting: ['My corrections, submitted', 'GitHub issue opened, waiting to be validated and published'],
+  awaiting: ['My corrections, submitted', 'GitHub issue opened, awaiting validation or review by an editor'],
 };
 
 function renderDash() {
@@ -793,7 +794,7 @@ function renderReadText(n, mine) {
 
   $('#pane-text').innerHTML = `
     ${mine ? `<div class="unsent-note">${mine.proposed_at
-      ? 'Your submission for this notice was sent as a GitHub issue. It appears here once it has been checked and published, usually within minutes.'
+      ? 'Your submission for this notice was sent as a GitHub issue. It appears here once published: within minutes for members of the team, after review by an editor for other contributors.'
       : 'You have changes to this notice saved in this browser only. Open it and press Send to GitHub to submit them.'}
       <button class="link" id="un-edit">Edit</button>${mine.proposed_at ? '' : ' · <button class="link" id="un-discard">Discard</button>'}</div>` : ''}
     <dl class="rec">
@@ -1343,7 +1344,7 @@ function issueBody(n, p) {
     '', '<!-- correction:begin -->', '```json',
     JSON.stringify(payload, null, 1), '```', '<!-- correction:end -->', '',
     '_Submitted from the proofreading interface. Do not edit the block above -',
-    'it is applied automatically to the data repository._',
+    'it is checked automatically and published, after review by an editor for contributors outside the team._',
   ].filter(x => x !== null).join('\n');
 }
 
@@ -1454,7 +1455,7 @@ function renderBanner() {
     badge.textContent = unsent ? `${unsent} correction${unsent > 1 ? 's' : ''} not submitted`
                                : `${sent} awaiting publication`;
     badge.title = unsent ? 'Saved in this browser only. Open them and press Send to GitHub.'
-                         : 'Submitted as GitHub issues; they appear once validated, usually within minutes.';
+                         : 'Submitted as GitHub issues; they appear once published, after review by an editor for contributors outside the team.';
     badge.onclick = () => go(`#/browse?flag=${unsent ? 'pending' : 'awaiting'}`);
   }
   bar.hidden = !CFG.propose || !EDITING || !ids.length;
@@ -1462,7 +1463,7 @@ function renderBanner() {
   bar.innerHTML = `
     ${unsent ? `<button class="link" data-goto="pending" title="Saved in this browser only. Press Send to GitHub on each notice."><b>${unsent}</b> not submitted</button>` : ''}
     ${sent ? `<button class="link" data-goto="awaiting"
-        title="Submitted as GitHub issues. They appear once validated, usually within a few minutes."><b>${sent}</b> awaiting publication</button>` : ''}
+        title="Submitted as GitHub issues. They appear once published, after review by an editor for contributors outside the team."><b>${sent}</b> awaiting publication</button>` : ''}
     ${sent ? '<button class="btn" id="pb-check">Refresh</button>' : ''}
     ${SEL && PENDING[SEL] && PENDING[SEL].proposed_at ? '<button class="btn" id="pb-done">Dismiss</button>' : ''}
     <button class="link end" id="pb-clear">Discard all</button>`;
@@ -1536,6 +1537,7 @@ function record(n, vals, geo = false) {
     corrected_fields: corrected,
     corrected_by: c.updated_by && c.updated_by !== 'local' ? c.updated_by : '',
     corrected_at: c.updated_at || '',
+    approved_by: c.approved_by || '', approved_at: c.approved_at || '',
     crop: pubCrop(n), crop_status: c.crop_status || 'unreviewed',
     scan_pages: n.pages, scan_urls: n.pages.map(pageURL),
     permalink: permalink(n),
@@ -1552,7 +1554,7 @@ const csvCell = v => {
 function toCSV(rows, vals, geo = false) {
   const head = ['id', 'volume', 'volume_title', 'volume_year', ...EXPORT_FIELDS,
     ...(vals === 'both' ? EXPORT_FIELDS.map(k => k + '_machine') : []),
-    'review_status', 'corrected_fields', 'corrected_by', 'corrected_at',
+    'review_status', 'corrected_fields', 'corrected_by', 'corrected_at', 'approved_by', 'approved_at',
     'crop_page', 'crop_box', 'crop_source', 'scan_pages', 'scan_urls', 'permalink',
     ...(geo ? ['page_geometry', 'yolo_boxes', 'yolo_pairing'] : [])];
   const lines = [head.join(',')];
@@ -1691,6 +1693,7 @@ function renderData(params) {
     ['*_machine', 'With “Both”: the machine extraction of each field, whether or not it was corrected.'],
     ['review_status', 'unreviewed, reviewed (checked against the scan) or needs_attention (flagged).'],
     ['corrected_fields, corrected_by, corrected_at', 'Fields changed by a specialist, with the contributor and date recorded in the data repository.'],
+    ['approved_by, approved_at', 'Editor who reviewed and published a correction from outside the team, and when. Empty for corrections made by the team.'],
     ['crop, crop_status', 'Facsimile drawing box on the scan: page, [x1, y1, x2, y2] in scan pixels, and whether it came from the detector or an editor.'],
     ['scan_pages, scan_urls', 'Scanned page(s) the notice was read from, and their full-resolution images.'],
     ['permalink', 'Address of the notice on this site.'],
