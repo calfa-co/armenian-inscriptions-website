@@ -333,10 +333,17 @@ body.editing .cropstrip{order:3;margin:8px 0 0;height:24%}
 .cropstrip a{position:absolute;right:6px;bottom:4px;font-size:10.5px;
   background:rgba(255,255,255,.9);padding:1px 5px;text-decoration:none}
 .cands{padding-top:24px}
-.cands-row{display:flex;gap:8px;height:100%;overflow-x:auto;align-items:stretch;max-width:100%}
-.cand{flex:0 0 auto;height:100%;border:1px solid var(--rule);background:#fff;padding:3px;cursor:pointer;display:flex}
+.cands-row{display:flex;gap:8px;width:100%;height:100%;overflow-x:auto;align-items:center;justify-content:safe center;container-type:size}
+.cand{flex:0 0 auto;border:1px solid var(--rule);background:#fff;padding:3px;cursor:pointer;display:flex}
+/* Many wide drawings still overflow at the minimum height: keep the scrollbar
+   visible (macOS hides it by default) so the others can be found. */
+.cands-row::-webkit-scrollbar{height:6px}
+.cands-row::-webkit-scrollbar-thumb{background:var(--rule);border-radius:3px}
 .cand:hover,.cand.on{border-color:var(--rubric)}
-.cand .cropwin{height:100%}
+/* One height for all, the largest at which they fit side by side: each button
+   adds 8px of padding and border, each gap 8px. A drawing too wide for the
+   strip no longer pushes the others out of view. */
+.cand .cropwin{height:max(36px,min(calc(100cqh - 8px),calc((100cqw - var(--k) * 16px + 8px) / var(--sum))))}
 .bx.cand{border:1.5px dashed rgba(138,42,30,.75);background:transparent;pointer-events:none}
 .bx.cand.hi{border-style:solid;background:rgba(138,42,30,.08)}
 .nocrop{color:var(--mut);font-size:12px;font-style:italic;padding:10px;text-align:center;

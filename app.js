@@ -1009,11 +1009,14 @@ function cropStrip(n, ec) {
 // never as the notice's own facsimile.
 const candidates = (n, pid) => !EDITING && !effCrop(n) && cropStatusOf(n) !== 'rejected'
   && pid === n.pages[0] ? (n.yolo_boxes || []) : [];
+// The thumbnails share one height, chosen so that together they fill the width
+// of the strip: --sum is the sum of their aspect ratios (see style.css).
 function candStrip(n, pid, boxes) {
   const g = n.page_geometry[pid];
+  const sum = boxes.reduce((s, { box: [x1, y1, x2, y2] }) => s + (x2 - x1) / (y2 - y1), 0);
   return `<div class="cropstrip cands">
     <span class="cap">${boxes.length} drawing${boxes.length > 1 ? 's' : ''} detected on this page · not yet matched to this notice</span>
-    <div class="cands-row">${boxes.map((b, i) =>
+    <div class="cands-row" style="--k:${boxes.length};--sum:${sum.toFixed(3)}">${boxes.map((b, i) =>
       `<button class="cand" data-ci="${i}" title="Show on the page">${cropWin(g, pid, b.box)}</button>`).join('')}</div></div>`;
 }
 
